@@ -78,9 +78,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'anime_video_converter',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'lyvantanh2002',
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '3306',
     }
 }
 
