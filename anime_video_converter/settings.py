@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'auth_site',
     'home',
+
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,10 +80,10 @@ WSGI_APPLICATION = 'anime_video_converter.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'anime_video_converter',
-        'USER': 'root',
-        'PASSWORD': 'lyvantanh2002',
-        'HOST': 'localhost',
+        'NAME': 'QLANIME',
+        'USER': 'anime',
+        'PASSWORD': 'anime1234',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
