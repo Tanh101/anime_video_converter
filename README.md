@@ -3,6 +3,10 @@
   
 ` pip install -r requirements.txt` 
 
+- Migrate
+
+` python manage.py migrate `
+
 - Run server
 
-` python manage runserver `
+` python manage.py runserver `

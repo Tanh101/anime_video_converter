@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["../../anime_video_converter/**/*.{html,js}"],
+    content: ["../auth_site/**/*.{html,js}"],
     theme: {
         extend: {
             height: {

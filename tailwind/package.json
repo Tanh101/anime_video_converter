@@ -5,8 +5,7 @@
     "tailwindcss": "^3.3.3"
   },
   "scripts": {
-    "dev" : "npx tailwindcss -i ./global.css -o ../dist/css/app.css --watch",
-    "build" : "npx tailwindcss -i ./global.css -o ../dist/css/app.css"
-
+    "dev": "npx tailwindcss -i ./global.css -o ../dist/css/app.css --watch",
+    "build": "npx tailwindcss -i ./global.css -o ../dist/css/app.css"
   }
 }
