@@ -1,0 +1,24 @@
+version: "3.7"
+services: 
+  db:
+    image: mysql:8.0
+    container_name: anime_product
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: QLANIME
+      MYSQL_ROOT_PASSWORD: anime
+      MYSQL_PASSWORD: anime1234
+      MYSQL_USER: anime
+      SERVICE_TAGS: dev 
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - dockerproject
+networks:
+  dockerproject:
+    driver: bridge
+volumes:
+  dbdata:
