@@ -1,5 +1,5 @@
 version: "3.7"
-services: 
+services:
   db:
     image: mysql:8.0
     container_name: anime_product
@@ -11,7 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: anime
       MYSQL_PASSWORD: anime1234
       MYSQL_USER: anime
-      SERVICE_TAGS: dev 
+      SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql
