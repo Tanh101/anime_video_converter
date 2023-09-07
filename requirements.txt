@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 django
 mysqlclient
 python-dotenv
+=======
+django
+mysqlclient
+>>>>>>> c72794d (Dashboard basic)
