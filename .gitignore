@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 node_modules
 __pycache__
 .env
+=======
+node_modules
+>>>>>>> c72794d (Dashboard basic)
