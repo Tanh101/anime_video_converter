@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
@@ -14,8 +13,3 @@ class User(models.Model):
     Update_at = models.DateTimeField(auto_now=True)
     use_in_migrations = True
     
-=======
-from django.db import models
-
-# Create your models here.
->>>>>>> c72794d (Dashboard basic)
