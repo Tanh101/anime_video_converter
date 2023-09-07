@@ -18,16 +18,27 @@
       </nav>
     </header>
 
-    <form method="POST" action="" class="mb-6 px-5">
+    <form method="POST" id="registration-form" action="" class="mb-6 px-5">
       {% csrf_token %}
       <div class="form max-w-lg mx-auto py-11 px-12 bg-white shadow-lg rounded-3xl mt-6">
         <h1 class="text-center text-3xl font-bold mb-10">Register</h1>
+         
+    <!-- Thêm thông báo lỗi chung ở đây -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
         <label for="email" class="login-label mb-4 block font-bold text-gray-700">Email</label>
         <input id="email" type="email" class="focus:border-green-500 focus:outline-none block w-full rounded-2xl border py-3 mt-1 px-3" name="email" placeholder="Email" required />
         <label for="password" class="mb-4 block mt-5 font-bold text-gray-700">Password</label>
         <input type="password" id="password" class="focus:border-green-500 focus:outline-none rounded-2xl border py-3 block w-full mt-1 px-3" placeholder="Password" name="password" required />
-        <label for="confirm-password" class="mb-4 block mt-5 font-bold text-gray-700">Confirm Password</label>
-        <input type="password" id="confirm-password" class="focus:border-green-500 focus:outline-none rounded-2xl border py-3 block w-full mt-1 px-3" placeholder="Password" name="confirm-password" required />
+        <label for="confirm_password" label="confirm_password" class="mb-4 block mt-5 font-bold text-gray-700">Confirm Password</label>
+        <input type="password" id="confirm_password" class="focus:border-green-500 focus:outline-none rounded-2xl border py-3 block w-full mt-1 px-3" placeholder="Password" name="confirm_password" required />        
         <button type="submit" class="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-300 hover:to-blue-300 focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium">Register</button>
         <p class="register-already mt-5 text-center">
           <span>Already have an account?</span>
@@ -37,3 +48,4 @@
     </form>
   </body>
 </html>
+
