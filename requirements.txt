@@ -1,3 +1,4 @@
 django
 mysqlclient
 python-dotenv
+pymysql
