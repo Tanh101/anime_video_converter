@@ -4,12 +4,11 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 class User(models.Model):
-    Id = models.AutoField(primary_key=True)
-    Email = models.CharField(max_length=50)
-    Password = models.CharField(max_length=50)
-    Role = models.BooleanField()
-    Status = models.CharField(max_length=25)
-    Created_at = models.DateTimeField(auto_now_add=True)
-    Update_at = models.DateTimeField(auto_now=True)
+    id = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    role = models.CharField(max_length=10, default='USER')
+    status = models.CharField(max_length=25)
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
     use_in_migrations = True
-    
