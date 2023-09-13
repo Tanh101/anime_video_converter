@@ -1,11 +1,71 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
+
 <head>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .has-mask {
+            position: absolute;
+            clip: rect(10px, 150px, 130px, 10px);
+        }
+    </style>
 </head>
+
 <body>
-    
+    <!-- component -->
+    <div class="bg-gradient-to-r from-green-300 via-blue-400 to-blue-300 min-h-screen">
+        <header class="header bg-white shadow">
+            <nav class="nav max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                <a href="/" class="nav_logo text-black font-semibold text-xl">Anime Video</a>
+            </nav>
+        </header>
+        <div class="max-w-lg w-full p-10 bg-white rounded-xl mx-auto my-5">
+            <div class="text-center">
+                <h2 class="mt-5 text-3xl font-bold text-gray-900">
+                    Video to Anime
+                </h2>
+                <p class="mt-2 text-sm text-gray-400">Upload video to convert</p>
+            </div>
+            <form class="mt-8 space-y-3" action="#" method="POST">
+                <div class="grid grid-cols-1 space-y-2">
+                    <label class="text-sm font-bold text-gray-500 tracking-wide">Attach Video</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label
+                            class="flex flex-col rounded-lg border-4 border-dashed w-full h-60 p-10 group text-center">
+                            <div
+                                class="h-full w-full text-center flex flex-col items-center justify-center items-center  ">
+                                <div class="flex flex-auto max-h-48 w-2/5 mx-auto -mt-10">
+                                    <img class="has-mask h-36 object-center"
+                                        src="https://img.freepik.com/free-vector/image-upload-concept-landing-page_52683-27130.jpg?size=338&ext=jpg"
+                                        alt="freepik image">
+                                </div>
+                                <p class="pointer-none text-gray-500 "><span class="text-sm">Drag and drop</span> files
+                                    here <br /> or <a href="" id="" class="text-blue-600 hover:underline">select a
+                                        file</a> from your computer</p>
+                            </div>
+                            <input type="file" class="hidden">
+                        </label>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-300">
+                    <span>File type: mp4,mov</span>
+                </p>
+                <div>
+                    <button type="submit"
+                        class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
+                                font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300">
+                        Convert
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
