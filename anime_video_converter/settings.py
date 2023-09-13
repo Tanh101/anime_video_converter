@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'auth_site',
     'home',
     'myadmin_site',
+    'rest_framework',
 ]
 
 
