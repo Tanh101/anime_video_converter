@@ -84,9 +84,9 @@ WSGI_APPLICATION = 'anime_video_converter.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'QLANIME',
-        'USER': 'anime',
-        'PASSWORD': 'anime1234',
+        'NAME': 'anime_video_converter',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
