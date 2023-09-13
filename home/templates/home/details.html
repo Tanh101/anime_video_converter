@@ -1,10 +1,90 @@
 <!DOCTYPE html>
+{% load static %}
+
 <html lang="en">
+
 <head>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .has-mask {
+            position: absolute;
+            clip: rect(10px, 150px, 130px, 10px);
+        }
+    </style>
 </head>
+
 <body>
+<<<<<<< Updated upstream
+=======
+    <!-- component -->
+    <div class="bg-gradient-to-r from-green-300 via-blue-400 to-blue-300 min-h-screen">
+        <header class="header bg-white shadow">
+            <nav class="nav max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                <a href="/" class="nav_logo text-black font-semibold text-xl">Anime Video</a>
+            </nav>
+        </header>
+
+        <div class="flex flex-col bg-white p-6 rounded-xl m-12">
+            <div class="my-5 flex justify-between">
+                <h2 class="mb-2 text-2xl font-bold">Convert Process</h2>
+            </div>
+
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-left text-sm text-gray-500">
+                    <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                No.
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" class="text-center px-6 py-3">
+                                Status
+                            </th>
+                            <th scope="col" class="text-center px-6 py-3">
+                                Progress
+                            </th>
+                            <th scope="col" class="text-center px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b bg-white hover:bg-gray-50">
+                            <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
+                                1
+                            </th>
+                            <td class="px-6 py-4">
+                                Anime Video Name
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-block bg-amber-400 text-white px-2 py-1 rounded">
+                                    UPLOADING
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="w-full bg-gray-200 rounded-full">
+                                    <div class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
+                                        style="width: 45%">
+                                        45%
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium text-center">
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Download</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+>>>>>>> Stashed changes
 </body>
+
 </html>
