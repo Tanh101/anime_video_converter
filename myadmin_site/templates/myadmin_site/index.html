@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -44,26 +45,115 @@
             <div class="w-1/6 border-gray-300 bg-white px-3 py-4">
                 <ul>
                     <a class="text-green-500 hover:text-green-700"
-                        href="">
+                         id="home_dashboard">
                         <li class="hover:bg-gray-100 mb-2 rounded-xl p-3">
                             <i class="fa-solid fa-house mr-2 w-5"></i>
                             Dashboard
                         </li>
                     </a>
+                    <a class="text-green-500 hover:text-green-700"
+                         id="videos_dashboard">
+                        <li class="hover:bg-gray-100 mb-2 rounded-xl p-3">
+                            <i class="fa-solid fa-house mr-2 w-5"></i>
+                            Videos
+                        </li>
+                    </a>
                     <a class="text-green-500 hover:text-green-700 hover:text-green-700"
-                        href="">
+                         id="users_dashboard">
                         <li
                             class="hover:bg-gray-100 mb-2 rounded-xl p-3">
-                            <i class="fa-solid fa-graduation-cap mr-2 w-5"></i>
-                            Teachers
+                            <i class="fa-solid fa-user mr-2 w-5"></i>
+                            Users
                         </li>
                     </a>
                 </ul>
             </div>
 
             <div class="m-6 w-5/6 rounded-xl bg-white px-10 py-4">
-              hello world
+                <table id="data_table">
+                    <thead>
+                        <tr>
+                            <tr id="table_headers">
+                            </tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
 </body>
+<script>
+    $(document).ready(function () {
+        function loadVideoData() {
+            $.ajax({
+                url: 'videos/',  // Replace with your API endpoint URL for videos.
+                method: 'GET',
+                success: function (data) {
+                    var tableHeaders = '<th>Video ID</th><th>User ID</th><th>Original Path</th><th>Converted Path</th><th>Created At</th><th>Status</th>';
+                    $('#table_headers').html(tableHeaders);
+
+                    // Clear the existing table rows.
+                    $('#data_table tbody').empty();
+
+                    // Iterate through the API data and add rows to the table.
+                    $.each(data.results, function (index, video) {
+                        var row = '<tr>' +
+                            '<td>' + video.Id + '</td>' +
+                            '<td>' + video.User_Id + '</td>' +
+                            '<td>' + video.Original_video_path+ '</td>' +
+                            '<td>' + video.Converted_video_path + '</td>' +
+                            '<td>' + video.Created_at + '</td>' +
+                            '<td>' + video.Status + '</td>' +
+                            '</tr>';
+                        $('#data_table tbody').append(row);
+                    });
+                },
+                error: function () {
+                    console.log('API request for videos failed');
+                },
+                error: function () {
+                    console.log('API request for videos failed');
+                }
+            });
+        }
+
+        // Function to load user data.
+        function loadUserData() {
+            $.ajax({
+                url: 'users/',  // Replace with your API endpoint URL for users.
+                method: 'GET',
+                success: function (data) {
+                    var tableHeaders = '<th>User ID</th><th>Email</th><th>Status</th>';
+                    $('#table_headers').html(tableHeaders);
+                    // Clear the existing table rows.
+                    $('#data_table tbody').empty();
+
+                    // Iterate through the API data and add rows to the table.
+                    $.each(data.results, function (index, user) {
+                        var row = '<tr>' +
+                            '<td>' + user.Id + '</td>' +
+                            '<td>' + user.Email + '</td>' +
+                            '<td>' + user.Status + '</td>' +
+                            '</tr>';
+                        $('#data_table tbody').append(row);
+                    });
+                } ,
+                error: function () {
+                    console.log('API request for users failed');
+                }
+            });
+        }
+
+        loadVideoData();
+
+        $('#videos_dashboard').click(function () {
+            loadVideoData();
+        });
+
+        $('#users_dashboard').click(function () {
+            loadUserData();
+        });
+    });
+</script>  
 </html>
