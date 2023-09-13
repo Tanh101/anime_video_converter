@@ -1,5 +1,0 @@
-DB_DATABASE = QLANIME
-DB_USERNAME  = anime
-DB_PASSWORD = anime1234
-DB_HOST = localhost
-DB_PORT = 3306
