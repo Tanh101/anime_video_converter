@@ -1,0 +1,69 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div id="admin" class="flex h-screen flex-col bg-gray-100">
+        <nav
+            class="flex w-full flex-wrap items-center justify-between border-b border-gray-200 bg-white p-4 p-4 md:top-0 md:z-20">
+            <a href="/" class="nav_logo flex items-center text-xl font-semibold text-black">
+                {% comment %} <img class="cover-fill mr-5 h-10 w-10 rounded-lg" src="{{ asset('images/logo.png') }}" alt=""> {% endcomment %}
+                <p>Anime Video</p>
+            </a>
+
+            <div class="flex">
+                <div class="relative ml-16">
+                    <div class="flex cursor-pointer items-center text-center" id="drop-down-btn">
+                        <img class="mr-2 h-8 w-8 rounded-3xl" src="" alt="avatar">
+                        Pham Tien Huu
+                        <i class="fa-solid fa-caret-down ml-2 mt-1 justify-center text-center"></i>
+                    </div>
+
+                    <div id="drop-down" class="absolute mt-4 hidden rounded border border-gray-300 bg-white shadow-md">
+                        <a href="/profile" class="block px-10 py-2 text-gray-800 hover:bg-gray-200">
+                            Profile
+                        </a>
+                        <form id="logout-form" action="" method="POST" class="d-none">
+                          {% csrf_token %}
+                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-gray-200">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex flex-grow">
+            <div class="w-1/6 border-gray-300 bg-white px-3 py-4">
+                <ul>
+                    <a class="text-green-500 hover:text-green-700"
+                        href="">
+                        <li class="hover:bg-gray-100 mb-2 rounded-xl p-3">
+                            <i class="fa-solid fa-house mr-2 w-5"></i>
+                            Dashboard
+                        </li>
+                    </a>
+                    <a class="text-green-500 hover:text-green-700 hover:text-green-700"
+                        href="">
+                        <li
+                            class="hover:bg-gray-100 mb-2 rounded-xl p-3">
+                            <i class="fa-solid fa-graduation-cap mr-2 w-5"></i>
+                            Teachers
+                        </li>
+                    </a>
+                </ul>
+            </div>
+
+            <div class="m-6 w-5/6 rounded-xl bg-white px-10 py-4">
+              hello world
+            </div>
+        </div>
+</body>
+</html>
