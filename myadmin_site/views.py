@@ -4,7 +4,7 @@ from rest_framework import permissions, status
 from .serializers import VideoSerializer, UserSerializer
 from rest_framework.decorators import api_view
 from home.models import Video
-from auth_site.models import User
+from auth_site.models import MyUser
 from django.core.paginator import Paginator
 
 @api_view(['GET'])  
@@ -31,7 +31,7 @@ def vide_detail(request, id):
 @api_view(['GET'])
 def user_list(request):
     page_number = request.GET.get('page', 1)
-    users = User.objects.all()
+    users = MyUser.objects.all()
     items_per_page = 10  
     paginator = Paginator(users, items_per_page)
     page = paginator.get_page(page_number)
@@ -45,7 +45,7 @@ def user_list(request):
 
 @api_view(['DELETE'])
 def delete_user(request, id):
-    user = User.objects.get(Id=id)
+    user = MyUserUser.objects.get(Id=id)
     user.delete()
     return JsonResponse({'message': 'User was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 

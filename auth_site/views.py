@@ -18,7 +18,6 @@ from myadmin_site.views import dashboard
 #         return redirect('dashboard')
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password
-from .models import MyUser
 
 def login(request):
     if request.method == 'POST':
@@ -28,14 +27,14 @@ def login(request):
 
         try:
             # Tìm tài khoản dựa trên địa chỉ email
-            user = MyUser.objects.get(Email=email)
+            user = MyUser.objects.get(email=email)
 
             # Kiểm tra mật khẩu
-            if check_password(password, user.Password):
+            if check_password(password, user.password):
                 # Đăng nhập thành công, kiểm tra trường Role
-                if user.Role == 'user':
+                if user.role == 'user':
                     # Điều hướng sang trang admin
-                    return redirect('register')
+                    return redirect('upload')
                 else:
                     # Điều hướng sang trang user
                     return redirect('dashboard')
@@ -60,7 +59,7 @@ def register(request):
             hashed_password = make_password(password)
 
             # Tạo người dùng mới và lưu vào cơ sở dữ liệu với mật khẩu đã mã hóa
-            user = User(Email=email, Password=hashed_password)
+            user = MyUser(email=email, password=hashed_password)
             user.save()
 
             # Chuyển hướng sau khi đăng ký thành công
