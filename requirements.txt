@@ -1,3 +1,6 @@
 django
 mysqlclient
 python-dotenv
+djangorestframework
+django-storages
+boto3

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'home',
     'myadmin_site',
     'rest_framework',
+    'storages',
 ]
 
 
@@ -136,3 +137,13 @@ STATICFILES_DIRS = [BASE_DIR / "dist"]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+COMPRESS_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+AWS_DEFAULT_ACL = 'public-read'
+AWS_QUERYSTRING_AUTH = False
+
+CLOUDFRONT_DOMAIN = os.getenv('CLOUDFRONT_DOMAIN')

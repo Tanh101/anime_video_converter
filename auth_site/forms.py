@@ -1,5 +1,5 @@
 from django import forms
-from .models import MyUser
+from .models import User
 
 
 
@@ -13,7 +13,7 @@ class RegistrationForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         email = self.cleaned_data.get('email')
-        if MyUser.objects.filter(Email=email).exists():
+        if User.objects.filter(Email=email).exists():
             raise forms.ValidationError("Email đã tồn tại.")
         password = cleaned_data.get("password")
         print(password)
