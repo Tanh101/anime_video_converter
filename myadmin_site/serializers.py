@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from home.models import Video
-from auth_site.models import User
+from auth_site.models import MyUser
 
 class VideoSerializer(ModelSerializer):
     class Meta:
@@ -9,5 +9,5 @@ class VideoSerializer(ModelSerializer):
         
 class UserSerializer(ModelSerializer):
     class Meta:
-        model = User
+        model = MyUser
         fields = ['id', 'email', 'password', 'role', 'status', 'created_at', 'update_at']

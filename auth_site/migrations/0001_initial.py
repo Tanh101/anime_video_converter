@@ -12,12 +12,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name='MyUser',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('email', models.CharField(max_length=50)),
                 ('password', models.CharField(max_length=50)),
-                ('role', models.BooleanField()),
+                ('role', models.CharField(max_length=50)),
                 ('status', models.CharField(max_length=25)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('update_at', models.DateTimeField(auto_now=True)),
