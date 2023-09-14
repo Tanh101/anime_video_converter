@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
-from .models import MyUser
+from .models import User
 def login(request): 
     return render(request, "auth_site/login.html")
 from django.contrib.auth.hashers import make_password
@@ -16,7 +16,7 @@ def register(request):
             hashed_password = make_password(password)
 
             # Tạo người dùng mới và lưu vào cơ sở dữ liệu với mật khẩu đã mã hóa
-            user = MyUser(Email=email, Password=hashed_password)
+            user = User(Email=email, Password=hashed_password)
             user.save()
 
             # Chuyển hướng sau khi đăng ký thành công
