@@ -5,9 +5,9 @@ from auth_site.models import User
 class VideoSerializer(ModelSerializer):
     class Meta:
         model = Video
-        fields = ['Id', 'User_Id', 'Original_video_path', 'Converted_video_path', 'Status', 'Created_at', 'Update_at']
+        fields = ['id', 'user_id', 'original_video_path', 'converted_video_path', 'status', 'created_at', 'update_at']
         
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['Id', 'Email', 'Password', 'Role', 'Status', 'Created_at', 'Update_at']
+        fields = ['id', 'email', 'password', 'role', 'status', 'created_at', 'update_at']

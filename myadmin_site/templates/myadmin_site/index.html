@@ -99,12 +99,12 @@
                     // Iterate through the API data and add rows to the table.
                     $.each(data.results, function (index, video) {
                         var row = '<tr>' +
-                            '<td>' + video.Id + '</td>' +
-                            '<td>' + video.User_Id + '</td>' +
-                            '<td>' + video.Original_video_path+ '</td>' +
-                            '<td>' + video.Converted_video_path + '</td>' +
-                            '<td>' + video.Created_at + '</td>' +
-                            '<td>' + video.Status + '</td>' +
+                            '<td>' + video.id + '</td>' +
+                            '<td>' + video.user_Id + '</td>' +
+                            '<td>' + video.original_video_path+ '</td>' +
+                            '<td>' + video.converted_video_path + '</td>' +
+                            '<td>' + video.created_at + '</td>' +
+                            '<td>' + video.status + '</td>' +
                             '</tr>';
                         $('#data_table tbody').append(row);
                     });
@@ -132,9 +132,9 @@
                     // Iterate through the API data and add rows to the table.
                     $.each(data.results, function (index, user) {
                         var row = '<tr>' +
-                            '<td>' + user.Id + '</td>' +
-                            '<td>' + user.Email + '</td>' +
-                            '<td>' + user.Status + '</td>' +
+                            '<td>' + user.id + '</td>' +
+                            '<td>' + user.email + '</td>' +
+                            '<td>' + user.status + '</td>' +
                             '</tr>';
                         $('#data_table tbody').append(row);
                     });
