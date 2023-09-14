@@ -8,7 +8,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <style>
         .has-mask {
             position: absolute;
@@ -32,7 +35,8 @@
                 </h2>
                 <p class="mt-2 text-sm text-gray-400">Upload video to convert</p>
             </div>
-            <form class="mt-8 space-y-3" action="#" method="POST">
+            <form class="mt-8 space-y-3" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="grid grid-cols-1 space-y-2">
                     <label class="text-sm font-bold text-gray-500 tracking-wide">Attach Video</label>
                     <div class="flex items-center justify-center w-full">
@@ -49,7 +53,8 @@
                                     here <br /> or <a href="" id="" class="text-blue-600 hover:underline">select a
                                         file</a> from your computer</p>
                             </div>
-                            <input type="file" class="hidden">
+                            <!-- <input type="file" class="hidden"> -->
+                            {{ upload_form.file }}
                         </label>
                     </div>
                 </div>
@@ -66,6 +71,21 @@
             </form>
         </div>
     </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success'%}
+                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+            {% elif message.tags == 'info' %}
+                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+            {% elif message.tags == 'warning' %}
+                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+            {% elif message.tags == 'error' %}
+                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 </body>
+
 
 </html>
