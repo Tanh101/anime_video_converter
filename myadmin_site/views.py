@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, JsonResponse
 from rest_framework import permissions, status
 from .serializers import VideoSerializer, UserSerializer
@@ -45,9 +45,21 @@ def user_list(request):
 
 @api_view(['DELETE'])
 def delete_user(request, id):
-    user = MyUserUser.objects.get(Id=id)
+    user = MyUser.objects.get(Id=id)
     user.delete()
-    return JsonResponse({'message': 'User was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+    return JsonResponse({'message': 'User was deleted successfully!'}, safe=False, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+def ban_user(request, id):
+    user = get_object_or_404(MyUser, id=id)
+    if user.status == 'Banned':
+        user.status = 'Active'
+        user.save()
+        return JsonResponse({'message': 'User has been unbanned successfully'}, safe=False, status=status.HTTP_200_OK)
+    else:
+        user.status = 'Banned'
+        user.save()
+        return JsonResponse({'message': 'User has been banned successfully'}, safe=False, status=status.HTTP_200_OK)
 
 # Create your views here.
 def dashboard(request):

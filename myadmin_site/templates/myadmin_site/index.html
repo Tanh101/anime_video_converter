@@ -8,6 +8,120 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script>
+    $(document).ready(function () {
+        function loadVideoData() {
+            $.ajax({
+                url: 'videos/',  // Replace with your API endpoint URL for videos.
+                method: 'GET',
+                success: function (data) {
+                    $('#Table_name').html('Videos List');
+                    var tableHeaders = '<th class="px-4 py-2 bg-gray-200 text-gray-800 border">Video ID</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">User ID</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Original Path</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Converted Path</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Created At</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Status</th>';
+                    $('#table_headers').html(tableHeaders);
+
+                    // Clear the existing table rows.
+                    $('#data_table tbody').empty();
+
+                    // Iterate through the API data and add rows to the table.
+                    $.each(data.results, function (index, video) {
+                        var row = '<tr>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.id + '</td>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.user_id + '</td>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.original_video_path+ '</td>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.converted_video_path + '</td>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.created_at + '</td>' +
+                            '<td class="px-4 py-2 border align-middle">' + video.status + '</td>' +
+                            '</tr>';
+                        $('#data_table tbody').append(row);
+                    });
+                },
+                error: function () {
+                    console.log('API request for videos failed');
+                },
+                error: function () {
+                    console.log('API request for videos failed');
+                }
+            });
+        }
+
+        // Function to load user data.
+        function loadUserData() {
+            $.ajax({
+                url: 'users/',  // Replace with your API endpoint URL for users.
+                method: 'GET',
+                success: function (data) {
+                    $('#Table_name').html('Users List');
+                    var tableHeaders = '<th class="px-4 py-2 bg-gray-200 text-gray-800 border">User ID</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Email</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Status</th><th class="px-4 py-2 bg-gray-200 text-gray-800 border">Action</th>';
+                    $('#table_headers').html(tableHeaders);
+                    // Clear the existing table rows.
+                    $('#data_table tbody').empty();
+
+                    // Iterate through the API data and add rows to the table.
+                    $.each(data.results, function (index, user) {
+                        // Determine the button color based on the user's status
+                        var buttonColor = user.status == 'Banned' ? 'blue' : 'red';
+                        var buttonContent = user.status == 'Banned' ? 'Unban' : 'Ban';
+                        console.log("Status: "+ user.status + " Button color: " + buttonColor)
+        
+                        var row = '<tr class="text-center" data-user-id="' + user.id + '">' +
+                            '<td class="px-4 py-2 border text-center">' + user.id + '</td>' +
+                            '<td class="px-4 py-2 border text-center">' + user.email + '</td>' +
+                            '<td class="px-4 py-2 border text-center">' + user.status + '</td>' +
+                            '<td class="px-4 py-2 border text-center">' +
+                                '<button class="bg-' + buttonColor + '-500 text-white py-1 px-3 rounded-full" onclick="banUser(' + user.id + ')" ' +
+                                 ' id="' + user.id + '">'+ buttonContent + '</button>' +
+                            '</td>'+
+                            '</tr>';
+                        $('#data_table tbody').append(row);
+                        console.log(row)
+                    });                                        
+                } ,
+                error: function () {
+                    console.log('API request for users failed');
+                }
+            });
+        }
+
+        loadVideoData();
+
+        $('#videos_dashboard').click(function () {
+            loadVideoData();
+        });
+
+        $('#users_dashboard').click(function () {
+            loadUserData();
+        });
+    });
+    function banUser(userId) {
+        // Make an AJAX request to your API to change the user's status to "Banned"
+        $.ajax({
+            url: 'users/' + userId + '/ban/',  // Replace with your API endpoint URL
+            method: 'PUT',  // Use the appropriate HTTP method (PUT or PATCH) for your API
+            success: function (data) {
+                // Update the user's status in the table
+                const statusCell = document.querySelector(`#data_table tbody tr[data-user-id="${userId}"] td:nth-child(3)`);
+                if(statusCell.textContent =='Active')
+                statusCell.textContent = 'Banned';
+                else statusCell.textContent = 'Active';
+                // Disable the "Ban" button
+                const button = document.querySelector(`#data_table tbody tr[data-user-id="${userId}"] td:nth-child(4) button`);
+                if(statusCell.textContent =='Banned')
+                {
+                button.classList.remove('bg-red-500');
+                button.classList.add('bg-blue-500');
+                button.textContent = 'Unban';}
+                else {
+                    button.classList.remove('bg-blue-500');
+                    button.classList.add('bg-red-500');
+                    button.textContent = 'Ban';
+                }
+            },
+            error: function () {
+                alert('Failed to ban the user. Please try again later.');
+            }
+        });
+    };
+</script>  
 </head>
 <body>
     <div id="admin" class="flex h-screen flex-col bg-gray-100">
@@ -21,7 +135,7 @@
             <div class="flex">
                 <div class="relative ml-16">
                     <div class="flex cursor-pointer items-center text-center" id="drop-down-btn">
-                        <img class="mr-2 h-8 w-8 rounded-3xl" src="" alt="avatar">
+                        <img class="mr-2 h-8 w-8 rounded-3xl" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUWFRgVFRYZGBgYGBgaGBgYGBgYGBgYGBgZGRgYGBgcIS4lHB4rHxgYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QGBISGjEhGCExNDQ0NDQ0NDQxMTQ0NDQ0MTExMTE0NDQ0NDQ0ND80MTQ0NDQ0MTExNDE0NDE0ND80NP/AABEIALcBEwMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAGAAEDBAUCB//EADkQAAEDAgQEBAUCBQQDAQAAAAEAAhEDBAUSITEGQVFhInGBkRMyobHwQsEHFFLR4RUjYpJTcvEW/8QAGQEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/8QAHhEBAQEBAAMBAQEBAAAAAAAAAAERAhIhMUEDURP/2gAMAwEAAhEDEQA/APQaLEN8ZX2RhAKJ5hpK814xu87w3us10jQ4YqS0IxYNEA8OVIIR9avkJCmWFxE/wFb7whviL5SlIw+Ha0VPVekUTLV5VhboqDzXp2GPlg8lIVM1sLFxx3hK3nhDmNu0KtIEi7xIxwI6BBj/AJkZYF8oUi0RtKnYVUDlNSqCcsiYmFpilWWReV4WxcNIGqFsYcQZClWOyzNqtTD2wFi4dWzIgt9khWdiT/EFsWY8A8kPYjU8YHdEVn8gVn06+My+HiUAVu/Gqphd+fjz9fSconBSFcFVkwSThIoEE5KaUkDymKSRQJpXYXAXTStI6IUFRqsSoqikFPKkpElplrYvcZKZPZeTXlxne53deg8X14pu8l5qweGV4uq98bmBVPFCP8OfoF5ngNTxr0XDDoEiVqvGiFuIToUVnZCnEmxVpArZmHz3XouB1paF5/ZU5kos4frwYUi0WVdkMY3sUTHVqGsbGhVqQIu+f1Rngp8IQVUPj9UZ4AJaFItbFWrkaXHZoJ9hKBbDHXGsXl2rzOp0A5D2RdjdQNovnmxw9wvIXv8AHEwQf6sv139kpI9ussRLxlOoic2kfTSFn4jZh0jYhC/Dt81rWhrS9x/pLnx3J1jzJ/sjAuD25ZAdsOmv6SU3/Uz/ABkUrT4bh0jdbDKoiFk3tcghusg/ZdUrnWeX7gffdWJUFzTc6oNNJ+yKLM+H0Q/VvYOsdfz6Ke1xRpJ12jy21SF9xbxFUQVYuagcJCqwu/N9OHU9uimKbMmJWmCTFKUigcJSuZTLQklckppXJKDsOXQKiBXQcgmlRVE+ZcOciIklzKSqKPGtTwEIIe3wIw4u190KVR4F4K+g4wV8PHmvTMIMgLyXDakP9V6jw9VloWowIjshDid2iL37IM4l3SrGZYU9Fo4TVipCrYe3wp6Ry1R5oPQaJlqwsbboVsWL5YPJZGObFKk+giqJf6o5wNkMCC6Yl/qjvCh4ApytD/HeIlgaxvPUj7LzipRD3iS0OMSDqAjDjV7nXHIZIjuN0KNptNQkuyjqZ18iNUv0grwqm2k0HOCOYpBvrmMyff2W0zEy6CAC3Tade8HfaPMIcw59MfPVJjYOh7e0yFqXNzTIAbpyMbDWA7t/hLfSyJ6tZ9SsHOBiGnoQQYG24gfUqxc1cug1GvoT99Asn+fggGQQcp8wPm7f5Uj6zi4NBkFzJ668/spCtEVQMzQZ1JPYaafRQ27zPKdDHLxbR1XLGHx9wSdpidD2Gqq0QRLpHzS30M+uy0jeFfKd9OQSbcawTqVU3YT01jn5KWkDBeRr2Ks6xLzq80yk4KmzE2MJznKI6qQYzbv2Lj3a0n7BdOf6T9cuv5X8TBOU9KpTdsKn/Q+ivNw3MJaTA3BBB+q3O+axeLGaSnlNU0JHRcStMOiVzKZzk2ZaDl6QeoyUg5BKXJF6gL1yXoiTMnVbOkgg4pahSq3wlGXE7dEI1R4SvDXvYFs6HnzXpXCdSQF5k4w+V6DwZVkKxkeP2QdxCN0ZfpQnxCxWkZmGbLm7dDwe6sYfT8MqjiTocoo7wh8sHkqOP/KUuHassCbiA+Eq34k+hC3+f1RrYVgGT2QUww71RJSrEM0EwOglTlaCMbrZ6jz1JWI+jGyt4lcy93ckxEHfsq4BO+ilSI6dUt/UfIH91qWNYO5kctY35QREKnStAdT6dT5KSrbADMA4jZ0OH2y6Ht+HP1prWbySczTnaSI5mRvC0AyHsa0mS4kz8u8D6BZNvcOY5p+bxNgnoCN/ePIouwrDmvyvnXcwNpOw/Oa3GbVhlq1zCdhlg6ctB9dfZZdO2cHTy1joBv8Af7opv6AYwxGsegPzR6SshlB0wBqIk6jXl9hp2lbZlUaryCG7AbxttzWq9hyaec9ucKrb0S9zp676ETC2KNPwxy6zsuXVx0jA+CC6Q1oPWBPuVetqEbnzn80VytYicw076f3lO+kRHhnvyjaD7rNldOZKuWtNoHmpsRvcjMg+Zw/6t/yqlQfBYCdXH5R0HUrMfUJJJMkrv/Hm/a839u+ZfHksy5Lkxcoy5ep5nZcmLlw5yjc9BJnSzquaib4iyJnPUT6ije9ROegl+IkqudJXUxr8SDRCNwPCUYcQjwoSrN8JXir3hmo3xFGHBdTWEKVG6lbfC1fLUhIy9Zpu0Q/xCzRbVs/whZWMiQt1IzsNZ4Vi4z86I7SnDEMYu6X+qzWhVwwfAFLj2yi4c+UKbGtQr+E+hB+hW7aP8B8tFjupy6Fs0S1jIPRZhXn91SOd2h3O0qubV86a9EVXNoC4kfsnpWkR+37paxAk27ew+Nhgbx0C2LHFLeMwLZ0zZg+PIGInzVnG7FpY5sfMIzDT6ILrUwHNDzkya5ZjN3B6HqnOVrrYO7l9NzA5kGDAiIIOo2RJw60tYIOnST9V5jgV1me9ky0+Js8iDqR0H+V6Ngt3FOTAI0Hrop16PsSYviLg4tJ0boO+sH6cvJd2uIyGOqCA+Y76wI5+Xb6UrRrX1x8TYfLPfc9zv9PW82hnuS98Np025aYJjMdJOXn0VnRjdtKLY8AAH2U4oGdvz2T4bTc4zEDkJlbdOgmau4o06OmuyVrb5czj8oBMR0Wo6gCFnY3dNZSLBGZ2kduq3Odsc73koXvbkveXH08lULly5y4Ll6Xmdyo3OXJcuHOQO564c5clyjc5B0XLkuUZeonvQSPeoH1FE+qqtWqmmLPxklm/GSWdXB7j7PCULfDlpRnjDJYUK243C81eyBS6pw4rvCH5aoM81fxW2gkrDZWyvHmpCvaMOqSweSp4iJKgwG5zMHkrFxqVpCDYZ6IKvzNT1RxWHgPkgO7P+76qVRlgIhqlxU6KLBD4fRLFXq/gyGtAMqO5uJKVV6rOd1A+qzazU1JwKtMphZzaxGwHs2PeFeo3Mj9PlH9likTvtmPGVwHv/ZVavCzHjfMOQdlPsYlTZidQ3TqA4kehKcXr2A5Xh4g+ESHDb9J32Kx7dJQm3CmUa7iYAIhree+p8kX4Hgz3SXSANtNCUF3+JsFywvBABaSY3BP0iF65w1f0ajA1j2uO5gg/ZdfuJ8CXE9QWrH1GtD6uXwA6hgEgE9f3lArvjO+G+XVH1HAl5cRlHMiNtuWi9queH2Pe9z2Zs4LTJJEHYR00WEf4fMY7/be9jJJDAWOaJ3y5wSPRa9Rn6k4KxOqXupubNMAEGSSyY0JOpBk79D6egNCw8Gw1lBmRjYEySdXOPUk7raa5a5usV04whHiV4c4OnbSFvX94GgjRCV+5rySDC6c2SsdS2Mxz1E56epooHOXVxdOeuC5cuKjc9BIXqJ71w56ge9NHb6igfVUb3qtUqLNrTqpVVWpUXL3qtUes2rI7zpKpnSU1rHsN6+WFClp85C2MSuw1hWJghzPLlxehJi9t4ZQLeNhy9Pv6MsK89xWhDioUVcJ3/hDSUWgg6ry3BbkscvSMLqh7QtRF2qRlIQHiTYqyOqL8UcWAwgm5cXPB7qVRjhDvAquJVtVYsvDT9FkXdSXFEqCo6UzQR3XLmpMesWpIkawHlK6LCNvz02Cs02BS/B6LOtIKFUzr69vLomuLaddwf6h+QrH8tP57rqnTLT1CasB+OWjHgAEZwdInTXnPJFv8P8JpsPxHSXiRpoeW4mSNBpspTZMfuPdXrSyDYyyIWpfxdFb67nODmOHkQRPupDdBxAO4+hVW2LogT66+35yVmjYkmTv9CtTlytWmGU9zXDBr7qdlHKEPcQXWQH7LpJjP1kY3dF0hpnpOhB7FC7797dDK2aVwHa9VXu7dp9Vjr/XSKdO6zJOeqr6eQpPqLv8Az62OH9OcqRz1C96jc9RPet654kc9V3vXD3qFz1nVw73qu96Z71A96za1hnvVWo9O96gcVLVkPmSXCSijTiW4e0EQVocJslgKt3NNlUclZwS1yaBYkdrVm5p6ILxyyMkwjK/uPhnxaBZ99VpvbuFKrz9jS0ohwnF3MIB2XFTD2EqelasbvChrducVa9o7rJfbAmR1lcOcxo3VS4xUbNSmiY1gGRPJZIkqjb3LnblaVs5GampUp5JVLHSQNVqWQad9+4ha7bORos+OkoUptLd9uqu27wfRXMXw85C4aEbrIsH8lMa1qhkmOylp25HKU9s6d91pW7OfXkrOUtV6dqNNIWhbWoCsMoAjbVTU3M2g+gWpyzelm2pBXmNAVWi9u0KyCukYdO2XnvGF6WuLTMHYgDQ/2XoRXn/GbNDpIVJ9B1tfFp1Oh58vzsrTsRnRYlSm7ceo5FQNqQdZH1Cw2IatXM1UX1FEy40UFSot8emP6XU7qihfUULqiic9dNc0r6ihdUUbnqFz1mriR71Xe9cveonFRonFMmlKVAkk0p0G8zGC1bmF8TNG6F3U2OaqtJoYd1h0FuN418XQe6wXV3DmVTfcqM1VFaLbw9V068PVZnxFG+sgvVrwnmuaFSSs1z1bsDqmJojs9Atixplx0WDbPkhoRlg9kwaud7SEF+0tn8yD57LetaP4FFa2rBp7az91r06YG/uno9qN7bAtPcarz5zMlZw5SvUqlOWkLy3GfDWcO/4FbNTW1aP0WlRfqFh4ZUkLXtHiZKkhrU+MRp+dkvikkZTB+6yMXxBrGEyMx281FgeIh8ZgdRv37K2/hgttqrv1D1CvNf2WfbP03lXGPWoymJXnnHD3AnxaHlMQes/sj979F5zxnWf4oEgpfi8/QhZ1gTB1WpVwtj2yEMMeQ7oijCLqWwVzldbGBVoFjoKirFXeI3QZCH3XJK7cuHSy56jc9VzUUbqiqYne9RueoS9cl6ipC5c5lwXJpQSEpsyjlMSgkzJKKU6YLFSqWNiCqf8AOGEZ18KJ3YVSqYKP6D7LGNeQUF4uhckogfgjen0XH+jhU1jivAUTrhbD8HCq1cEJ2Uw1nsrSVsWTCNVmf6a5h2K2sPBOhSrF/BmudV10Ak8xsjKm4wOUubJ7AyhOm/IZG6uHGZbld4e7d1j1VnqvRLio1uSrtBLT3a6N/UD3W3a3jHN+YGP30K8u/wD1oazI6XCNI0PrKzrjjsNkMaSTvOnonjWr1M9/Xsjr9oY8zowGTvsvI8Vv89V7+rjHlKpu4vquZkENZGzdN1Ro1QVuRi32KsLuYYfNXHYllaXdkPUKkABWmMLlUctz13gu2B0CMMMtcsaLEwuhqi+wobLn+tfjQtWK+xVmMhWWuW4w4vHw0oMv2B5IKIcZuw0QhGrdEnRasWUOYvhRBloUFgHMOoRK9+bcKpWpjkFi81rygc4hfLShL4qLcYtXvkALEOAv6LpzLjn1ZrMNVN8RaLsCf0KTMAqmYadFU1m50+dTvw945KI2buhUVzmT5k38u5OaLkDgp1x8NyctKB5TqOCkg96NBm5amZaMJ1YITF5jTmp2Oytb+bLo5qr8NYf0Bcuw+nM5G+yul51hc84UVUq4fSjVje8D8jmnOD250NNv1BidP3Vp22v5qnZGYjsgzK/DFu79JHk7+/oqDuD6Q+V7h6D86ImB1gpP33UyLtCh4Sp6y8gdY2XQ4Jo/+R8z/wAf7IlyxKcskA/miePP+HlQq/gRjhpVM7DwCPI6/VZTv4Z+Ik3ALemQz576FH7Ty5KVp01CeMPKvOx/Dd41bcNJ5AsdEKQ8CXDT4X03jpLmny1EI8doVJm5/nknjDyoEp8PXLPmYT/6kO94W1Z4YXDKRl89CiVlaf28l2XndZvLU6Zlrw+5gEGSty1tnDfkom3LhzUrbx35Cx/zxfNebSUdxUyhVv5t5MaBQVH5vmM+a3OWb0zr9mc6yqgsR0WvkCc6LbLH/kQnFkOYWt90xPIgH0QxkOs2cx9FwLCmf/i2BTadC0Lj+WZ5f5TTGaMOZyj1CkGHjXQfT7K6aAG3029l24dZ5czp0QDlzw8w7CPRZ1fhg/pAMa+yM8p/JIT5W7ka7T5ojzargLxuw+yqPwr/AIn2XqppjuPqo32rTu0HvEfVTF15UcHnkuHYN2XqD7Jg2YIUD7WnzafZPE15l/o3ZJelfytLoPYplfFNSMB0J/OitvBIb5J0kpEQcnadZ/NkkkDGT5Sk0w4+SSSQSzKZz0kkDAfVPTMSE6SKUpPrhszzSSQQU7gOJglS0gJI5JJK1IlcYhdvfCSSiqjL/M/I0bbkq09xmEySIla9d5pEpJIpNdOi6nRJJBwWwuc3I+hSSQLKkUySBw5JzZ1SSUCCfKkkqE2eeyZ7I1BTJIE2FxUcPz87JJIiA+iSSSo//9k=" alt="avatar">
                         Pham Tien Huu
                         <i class="fa-solid fa-caret-down ml-2 mt-1 justify-center text-center"></i>
                     </div>
@@ -47,14 +161,14 @@
                     <a class="text-green-500 hover:text-green-700"
                          id="home_dashboard">
                         <li class="hover:bg-gray-100 mb-2 rounded-xl p-3">
-                            <i class="fa-solid fa-house mr-2 w-5"></i>
+                            <i class="fa-solid fa-chart-simple mr-2 w-5"></i>
                             Dashboard
                         </li>
                     </a>
                     <a class="text-green-500 hover:text-green-700"
                          id="videos_dashboard">
                         <li class="hover:bg-gray-100 mb-2 rounded-xl p-3">
-                            <i class="fa-solid fa-house mr-2 w-5"></i>
+                            <i class="fa-solid fa-video mr-2 w-5"></i>
                             Videos
                         </li>
                     </a>
@@ -70,7 +184,8 @@
             </div>
 
             <div class="m-6 w-5/6 rounded-xl bg-white px-10 py-4">
-                <table id="data_table">
+                <h2 id="Table_name" class="text-xl font-bold mb-2"></h2>
+                <table id="data_table" class="min-w-full table-auto">
                     <thead>
                         <tr>
                             <tr id="table_headers">
@@ -83,77 +198,4 @@
             </div>
         </div>
 </body>
-<script>
-    $(document).ready(function () {
-        function loadVideoData() {
-            $.ajax({
-                url: 'videos/',  // Replace with your API endpoint URL for videos.
-                method: 'GET',
-                success: function (data) {
-                    var tableHeaders = '<th>Video ID</th><th>User ID</th><th>Original Path</th><th>Converted Path</th><th>Created At</th><th>Status</th>';
-                    $('#table_headers').html(tableHeaders);
-
-                    // Clear the existing table rows.
-                    $('#data_table tbody').empty();
-
-                    // Iterate through the API data and add rows to the table.
-                    $.each(data.results, function (index, video) {
-                        var row = '<tr>' +
-                            '<td>' + video.id + '</td>' +
-                            '<td>' + video.user_Id + '</td>' +
-                            '<td>' + video.original_video_path+ '</td>' +
-                            '<td>' + video.converted_video_path + '</td>' +
-                            '<td>' + video.created_at + '</td>' +
-                            '<td>' + video.status + '</td>' +
-                            '</tr>';
-                        $('#data_table tbody').append(row);
-                    });
-                },
-                error: function () {
-                    console.log('API request for videos failed');
-                },
-                error: function () {
-                    console.log('API request for videos failed');
-                }
-            });
-        }
-
-        // Function to load user data.
-        function loadUserData() {
-            $.ajax({
-                url: 'users/',  // Replace with your API endpoint URL for users.
-                method: 'GET',
-                success: function (data) {
-                    var tableHeaders = '<th>User ID</th><th>Email</th><th>Status</th>';
-                    $('#table_headers').html(tableHeaders);
-                    // Clear the existing table rows.
-                    $('#data_table tbody').empty();
-
-                    // Iterate through the API data and add rows to the table.
-                    $.each(data.results, function (index, user) {
-                        var row = '<tr>' +
-                            '<td>' + user.id + '</td>' +
-                            '<td>' + user.email + '</td>' +
-                            '<td>' + user.status + '</td>' +
-                            '</tr>';
-                        $('#data_table tbody').append(row);
-                    });
-                } ,
-                error: function () {
-                    console.log('API request for users failed');
-                }
-            });
-        }
-
-        loadVideoData();
-
-        $('#videos_dashboard').click(function () {
-            loadVideoData();
-        });
-
-        $('#users_dashboard').click(function () {
-            loadUserData();
-        });
-    });
-</script>  
 </html>
