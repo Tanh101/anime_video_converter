@@ -7,7 +7,7 @@ class MyUser(models.Model):
     email = models.CharField(unique=True, max_length=50)
     password = models.CharField(max_length=255)
     role = models.CharField(max_length=10, default='user')
-    status = models.CharField(max_length=25)
+    status = models.CharField(max_length=25, default='active')
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
     use_in_migrations = True
