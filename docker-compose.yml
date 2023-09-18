@@ -1,24 +1,40 @@
 version: "3.7"
 services:
-  db:
-    image: mysql:8.0
-    container_name: anime_product
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: QLANIME
-      MYSQL_ROOT_PASSWORD: anime
-      MYSQL_PASSWORD: anime1234
-      MYSQL_USER: anime
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - dbdata:/var/lib/mysql
-    networks:
-      - dockerproject
+    db:
+        image: mysql:8.0
+        container_name: anime_product
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: QLANIME
+            MYSQL_ROOT_PASSWORD: anime
+            MYSQL_PASSWORD: anime1234
+            MYSQL_USER: anime
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - dockerproject
+    # web:
+    #     build: ./anime_video_converter
+    #     command: python manage.py runserver 127.0.0.1:8000
+    #     volumes:
+    #         - ./anime_video_converter/:/usr/src/anime_video_converter/
+    #     ports:
+    #         - 8000:8000
+    #     environment:
+    #         MYSQL_DATABASE: QLANIME
+    #         MYSQL_ROOT_PASSWORD: anime
+    #         MYSQL_PASSWORD: anime1234
+    #         MYSQL_USER: anime
+    #         SERVICE_TAGS: dev
+    #         SERVICE_NAME: web
+    #     depends_on:
+    #         - db
+    #     networks:
+    #         - dockerproject
 networks:
-  dockerproject:
-    driver: bridge
+    dockerproject:
+        driver: bridge
 volumes:
-  dbdata:
+    dbdata:
