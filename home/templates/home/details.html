@@ -5,17 +5,40 @@
 
 <head>
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+    integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://kit.fontawesome.com/YOUR_KIT_CODE.css" integrity="SHA384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" crossorigin="anonymous">
     <style>
         .has-mask {
             position: absolute;
             clip: rect(10px, 150px, 130px, 10px);
+        }
+
+        .pagination-style-three a {
+            padding: 5px 15px;
+            background: #fff;
+            color: #ff6407;
+            border-radius: 25px;
+            box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-style-three a.selected,
+        .pagination-style-three a:hover,
+        .pagination-style-three a:active,
+        .pagination-style-three a:focus {
+            background: #ff6407;
+            color: #ffffff;
+        }
+
+        a {
+            margin: 0 5px;
         }
     </style>
 </head>
@@ -24,81 +47,126 @@
     <!-- component -->
     <div class="bg-gradient-to-r from-green-300 via-blue-400 to-blue-300 min-h-screen">
         <header class="header bg-white shadow">
-            <nav class="nav max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="/" class="nav_logo text-black font-semibold text-xl">Anime Video</a>
+            <nav class="mx-auto flex max-w-full items-center justify-between px-10 py-4">
+                <a href="/" class="nav_logo flex items-center text-xl font-semibold text-black">
+                    <img class="cover-fill mr-5 h-12 w-12 rounded-3xl" src="{% static 'images/logo2.png' %}" alt="" />
+                    <p>AnimeChan</p>
+                </a>
+                <div class="relative">
+                    <div id="drop-down-btn" class="cursor-pointer flex">
+                        <div class="flex pl-10 justify- text-center items-center">
+                            <img class="cover-fill h-14 w-14 rounded-3xl border" src="{% static 'images/avatar.png' %}"
+                                alt="">
+                            <i class="fas fa-solid fa-caret-down ml-2 mt-1 justify-center text-center"></i>
+                        </div>
+                    </div>
+                    <div id="drop-down" class="absolute hidden rounded border mt-3 border-gray-300 bg-white shadow-md">
+                        <p class="px-4 py-2 font-medium ">{{user_email}}</p>
+                        <form id="logout-form" action="" method="POST" class="d-none">
+                            {%csrf_token%}
+                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </nav>
         </header>
 
-        <div class="flex flex-col bg-white p-6 rounded-xl m-12">
+        <div class="flex flex-col bg-white p-6 rounded-xl mx-12 my-6">
             <div class="my-5 flex justify-between">
                 <h2 class="mb-2 text-2xl font-bold">Convert Process</h2>
             </div>
-
+            <div class="flex mb-6 text-center items-center">
+                <h3 class="text-md ">Total Results: </h3>
+                <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
+            </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-left text-sm text-gray-500">
                     <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                No.
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" class="text-center px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" class="text-center px-6 py-3">
-                                Progress
-                            </th>
-                            <th scope="col" class="text-center px-6 py-3">
-                                Action
-                            </th>
+                            <th scope="col" class="px-6 py-3">No.</th>
+                            <th scope="col" class="px-6 py-3">Name</th>
+                            <th scope="col" class="text-center px-6 py-3">Status</th>
+                            <th scope="col" class="text-center px-6 py-3">Progress</th>
+                            <th scope="col" class="text-center px-6 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {%for videos in page%}
                         <tr class="border-b bg-white hover:bg-gray-50">
                             <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
-                                1
-                            </th>
-                            <td class="px-6 py-4">
-                                Anime Video Name
-                            </td>
+                                {{forloop.counter}}</th>
+                            <td class="px-6 py-4">{{videos.name}}</td>
                             <td class="px-6 py-4 text-center">
-                                <span class="inline-block bg-amber-400 text-white px-2 py-1 rounded">
-                                    UPLOADING
-                                </span>
+                                <span
+                                    class="inline-block bg-amber-400 text-white px-2 py-1 rounded uppercase">{{videos.status}}</span>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="w-full bg-gray-200 rounded-full">
                                     <div class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
-                                        style="width: 45%">
-                                        45%
-                                    </div>
+                                        style="width: 45%">45%</div>
                                 </div>
                             </td>
+                            {%if videos.status == 'converted' %}
                             <td class="px-6 py-4 text-sm font-medium text-center">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Download</a>
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
                             </td>
+                            {%endif%}
                         </tr>
+                        {%endfor%}
                     </tbody>
                 </table>
             </div>
+            <div class="pagination pagination-style-three mt-10 flex justify-end">
+                {%if page_num > 1 %}
+                <a href="/details/{{ page_num|add:-1 }}">Prev</a>
+                {%else%}
+                <a class="pointer-events-none" href="/details/{{ page_num|add:-1 }}">Prev</a>
+                {%endif%}
+                {%for i in page_array%}
+                {%if page_num == i%}
+                <a class="selected" href="/details/{{i}}">{{i}}</a>
+                {%else%}
+                <a href="/details/{{i}}">{{i}}</a>
+                {%endif%}
+                {%endfor%}
+                {%if page_num > total_page %}
+                <a class="pointer-events-none" href="/details/{{ page_num|add:+1 }}">Next</a>
+                {%else%}
+                <a href="/details/{{ page_num|add:+1 }}">Next</a>
+                {%endif%}
+            </div>
         </div>
     </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.tags == 'success'%}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'info' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'warning' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'error' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
 </body>
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success'%}
+<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% elif message.tags == 'info' %}
+<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% elif message.tags == 'warning' %}
+<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% elif message.tags == 'error' %}
+<script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+{% endif %}
+{% endfor %}
+{% endif %}
+<script>
+    let isPressed = true;
+    document.getElementById("drop-down-btn").onclick = function () { myFunction() };
+
+    function myFunction() {
+        if (isPressed) {
+            document.getElementById("drop-down").classList.remove("hidden");
+            isPressed = false;
+        }
+        else {
+            document.getElementById("drop-down").classList.add("hidden");
+            isPressed = true;
+        }
+    }
+</script>
 
 </html>

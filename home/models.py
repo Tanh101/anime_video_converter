@@ -6,7 +6,7 @@ from auth_site.models import MyUser
 
 class Video(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_video', null=True)
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='user_video', null=True)
     name = models.CharField(max_length=100)
     original_video_path = models.CharField(max_length=50, blank=True, null=True)
     converted_video_path = models.CharField(max_length=50, blank=True, null=True)
