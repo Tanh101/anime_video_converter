@@ -8,6 +8,9 @@ $(document).ready(function () {
     const totalPagesElement = document.querySelector(`#total_pages`);
     const currentPageNumberElement = document.querySelector(`#current_page_number`);
     const resultsNumber = document.querySelector(`#results_number`);
+    const mainDashboard = document.querySelector(`#main_dashboard_table`);
+    const registeredUsers = document.querySelector(`#registered_users`);
+    const uploadedVideos = document.querySelector(`#uploaded_videos`);
     var previousText
 
     function formatCustomDate(apiDate) {
@@ -187,6 +190,7 @@ $(document).ready(function () {
             pageCount.classList.remove('hidden')
             pageNavigator.classList.remove('hidden')
             tableName.classList.remove('hidden')
+            mainDashboard.classList.add('hidden')
         }
         else if(activeCategory == "users_dashboard") {
             users_dashboard.classList.remove('text-green-500')
@@ -205,6 +209,7 @@ $(document).ready(function () {
             pageCount.classList.remove('hidden')
             pageNavigator.classList.remove('hidden')
             tableName.classList.remove('hidden')
+            mainDashboard.classList.add('hidden')
         }
         else {
             users_dashboard.classList.remove('text-green-500')
@@ -221,12 +226,24 @@ $(document).ready(function () {
             pageCount.classList.add('hidden')
             pageNavigator.classList.add('hidden')
             tableName.classList.add('hidden')
+            mainDashboard.classList.remove('hidden')
         }
     }
 
-    loadVideoData(1);
+    function getMainDashboardData() {
+        $.ajax({ 
+            url: 'page_info/',
+            method: 'GET',
+            success: function (data) {
+                registeredUsers.innerHTML = data.Total_users;
+                uploadedVideos.innerHTML = data.Total_videos;
+            }
+        })
+    }
+    
     getActiveCategory(home_dashboard)
-    consoleText(['Anime Video', 'Made with love ❤️'], 'text',['black', '#3498DB', 'tomato', '#F1C40F', '#2ECC71', '#2C3E50', '#AF7AC5', '#1A5276', 'EC2F07', '07ECD7']);
+    consoleText(['AnimeChan', 'Made with love ❤️'], 'text',['black', '#3498DB', 'tomato', '#F1C40F', '#2ECC71', '#2C3E50', '#AF7AC5', '#1A5276', 'EC2F07', '07ECD7']);
+    getMainDashboardData()
 
     $('#videos_dashboard').click(function () {
         getActiveCategory("videos_dashboard")
