@@ -9,7 +9,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth_site', '0009_merge_20230918_1716'),
     ]
 
     operations = [
