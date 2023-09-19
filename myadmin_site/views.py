@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from rest_framework import permissions, status
 from .serializers import VideoSerializer, UserSerializer
@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from home.models import Video
 from auth_site.models import MyUser
 from django.core.paginator import Paginator
+import requests
+import json
 
 @api_view(['GET'])  
 def video_list(request, pageNumber):
@@ -118,6 +120,24 @@ def search_videos(request, pageNumber):
         }
         return JsonResponse(response_data, safe=False, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def get_page_info(request):
+    Total_users = MyUser.objects.all().count();
+    Total_videos = Video.objects.all().count();
+    resposne_data = {
+        'Total_users': Total_users,
+        'Total_videos': Total_videos,
+    }
+    return JsonResponse(resposne_data, safe=False, status=status.HTTP_200_OK)
+
 # Create your views here.
 def dashboard(request):
-    return render(request, "myadmin_site/index.html")
+    if(request.session.get('user_role') == 'admin'):
+        return render(request, "myadmin_site/index.html",{
+        'user_id': request.session.get('user_id'),
+        'user_role': request.session.get('user_role'),
+        'user_email': request.session.get('user_email'),
+        'user_status': request.session.get('user_status'),
+        })
+    else:
+        return redirect('login');

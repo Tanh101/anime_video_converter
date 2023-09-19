@@ -17,7 +17,7 @@ def generate_random_users(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-         ('auth_site', '0005_alter_myuser_role'),
+         ('auth_site', '0001_initial'),
     ]
 
     operations = [
