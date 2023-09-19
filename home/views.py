@@ -5,6 +5,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.conf import settings
 import boto3
+from .models import Video
+from django.core.paginator import Paginator
 
 def upload(request):
     if request.method == 'POST':
@@ -50,5 +52,29 @@ def upload(request):
 
     return render(request, 'home/upload.html', {'upload_form': upload_form})
 
-def details(request):
-    return render(request, "home/details.html")
+def details(request, page_num):
+    user_id = request.session.get('user_id')
+    user_email = request.session.get('user_email').split('@')[0]
+
+    if(not user_id):
+        return redirect("/login")
+    
+    items_per_page = 5
+
+    start_index = (page_num - 1) * items_per_page
+    end_index = start_index + items_per_page
+
+    videos = Video.objects.filter(user_id=user_id)[start_index:end_index]
+
+    total_count = Video.objects.filter(user_id=user_id).count()
+    total_page = (total_count / items_per_page)
+    tmp = round(total_page)
+    if total_page > tmp:
+        tmp = tmp + 1
+    page_array = range(1, tmp + 1, 1)
+    
+    paginator = Paginator(videos, items_per_page)
+    page = paginator.get_page(page_num)
+    
+
+    return render(request, 'home/details.html', {'page_num' : page_num, 'page': page, 'total_count': total_count, 'total_page': total_page, 'page_array': page_array, 'user_email' : user_email})
