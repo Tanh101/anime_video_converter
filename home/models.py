@@ -12,5 +12,5 @@ class Video(models.Model):
     converted_video_path = models.CharField(max_length=50, blank=True, null=True)
     status = models.CharField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
     use_in_migrations = True
