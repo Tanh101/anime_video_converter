@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload</title>
+    <title>Details</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
@@ -121,8 +121,6 @@
             <div class="pagination pagination-style-three mt-10 flex justify-end">
                 {%if page_num > 1 %}
                 <a href="/details/{{ page_num|add:-1 }}">Prev</a>
-                {%else%}
-                <a class="pointer-events-none" href="/details/{{ page_num|add:-1 }}">Prev</a>
                 {%endif%}
                 {%for i in page_array%}
                 {%if page_num == i%}
@@ -131,9 +129,7 @@
                 <a href="/details/{{i}}">{{i}}</a>
                 {%endif%}
                 {%endfor%}
-                {%if page_num > total_page %}
-                <a class="pointer-events-none" href="/details/{{ page_num|add:+1 }}">Next</a>
-                {%else%}
+                {%if page_num < total_page %}
                 <a href="/details/{{ page_num|add:+1 }}">Next</a>
                 {%endif%}
             </div>

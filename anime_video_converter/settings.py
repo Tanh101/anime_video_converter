@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'myadmin_site',
     'rest_framework',
     'storages',
-    'django_seed'
+    'django_seed',
+    'ai_model',
 ]
 
 

@@ -42,7 +42,7 @@ def upload(request):
 
             # TODO: Save `s3_video_url` to your database
             messages.success(request, "Video uploaded successfully")
-            return redirect('details')
+            return redirect('details', page_num=1)
         else:
             for field, err in upload_form.errors.items():
                 messages.error(request, err)
@@ -64,7 +64,7 @@ def details(request, page_num):
     start_index = (page_num - 1) * items_per_page
     end_index = start_index + items_per_page
 
-    videos = Video.objects.filter(user_id=user_id)[start_index:end_index]
+    videos = Video.objects.filter(user_id=user_id).order_by('-updated_at')[start_index:end_index]
 
     total_count = Video.objects.filter(user_id=user_id).count()
     total_page = (total_count / items_per_page)
