@@ -68,6 +68,8 @@ $(document).ready(function () {
                 }
                 if(pageNumber == 1)
                 previousButton.classList.add('hidden');
+                if(pageNumber == data.num_pages)
+                 { nextButton.classList.add('hidden'); }
                 $.each(data.results, function (index, video) {
                     var videoStatusColor
                     var customDate = formatCustomDate(video.created_at);
@@ -140,6 +142,8 @@ $(document).ready(function () {
                 }
                 if(pageNumber == 1)
                 previousButton.classList.add('hidden');
+                if(pageNumber == data.num_pages)
+                { nextButton.classList.add('hidden'); }
                 $.each(data.results, function (index, user) {
                     var userStatusColor = user.status == 'banned' ? 'rose-500' : 'green-500';
                     var buttonColor = user.status == 'banned' ? 'blue' : 'red';
@@ -242,7 +246,7 @@ $(document).ready(function () {
     }
     
     getActiveCategory(home_dashboard)
-    consoleText(['AnimeChan', 'Made with love ❤️'], 'text',['black', '#3498DB', 'tomato', '#F1C40F', '#2ECC71', '#2C3E50', '#AF7AC5', '#1A5276', 'EC2F07', '07ECD7']);
+    consoleText(['AnimeChan', 'Made with love ❤️'], 'text',['black', '#3498DB', 'tomato', '#F1C40F', '#2ECC71', '#2C3E50', '#AF7AC5', '#1A5276', '#EC2F07', '#07ECD7']);
     getMainDashboardData()
 
     $('#videos_dashboard').click(function () {
@@ -313,6 +317,8 @@ $(document).ready(function () {
                         }
                         if(pageNumber == 1)
                         previousButton.classList.add('hidden')
+                        if(pageNumber == data.num_pages)
+                        { nextButton.classList.add('hidden'); }
                         // Display search results in the 'searchResults' div
                         $.each(data.results, function (index, user) {
                             // Determine the button color based on the user's status
@@ -375,6 +381,8 @@ $(document).ready(function () {
                     }
                     if(pageNumber == 1)
                     previousButton.classList.add('hidden')
+                    if(pageNumber == data.num_pages)
+                    { nextButton.classList.add('hidden'); }
                     $.each(data.results, function (index, video) {
                         var videoStatusColor
                         var customDate = formatCustomDate(video.created_at);
@@ -407,7 +415,6 @@ $(document).ready(function () {
     });
 
     function getNewPage(type) {
-        var totalPagesElement = document.getElementById("total_pages");
         var totalPages = parseInt(totalPagesElement.innerHTML);
         var pageNumber
         if(type == "Next"){

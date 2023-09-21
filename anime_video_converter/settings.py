@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'storages',
     'django_seed',
     'ai_model',
+    'landing_page',
 ]
 
 

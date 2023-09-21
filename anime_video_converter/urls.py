@@ -20,5 +20,6 @@ urlpatterns = [
     path("dashboard/", include('myadmin_site.urls')),
     path("", include('auth_site.urls')),
     path("", include('home.urls')),
+    path("", include('landing_page.urls')),
     path("", include('ai_model.urls')),
 ]

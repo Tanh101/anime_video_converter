@@ -9,5 +9,5 @@ class MyUser(models.Model):
     role = models.CharField(max_length=10, default='user')
     status = models.CharField(max_length=25, default='active')
     created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
     use_in_migrations = True
