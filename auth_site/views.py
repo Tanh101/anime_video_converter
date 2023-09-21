@@ -23,7 +23,7 @@ def login(request):
             if check_password(password, user.password):
                 if user.status == 'active':
                     user_created_at = user.created_at.strftime("%Y-%m-%d %H:%M:%S")
-                    user_updated_at = user.update_at.strftime("%Y-%m-%d %H:%M:%S")
+                    user_updated_at = user.updated_at.strftime("%Y-%m-%d %H:%M:%S")
                     # Đăng nhập thành công, lưu thông tin người dùng vào phiên làm việc
                     request.session['user_id'] = user.id
                     request.session['user_role'] = user.role
