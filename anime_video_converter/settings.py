@@ -150,3 +150,9 @@ AWS_DEFAULT_ACL = 'public-read'
 AWS_QUERYSTRING_AUTH = False
 
 CLOUDFRONT_DOMAIN = os.getenv('CLOUDFRONT_DOMAIN')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
