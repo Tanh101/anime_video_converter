@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/landing_page.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"
+    ></script>
+    <script src="{% static 'js/landing_page.js' %}"></script>
+    <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.3/gsap.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  </head>
+  <body>
+    <div
+      class="absolute top-0 left-0 right-0 w-full h-20 bg-[#050506] bg-opacity-70 shadow"
+    >
+      <nav
+        class="sticky flex w-full flex-wrap items-center justify-between p-4 p-4 md:top-0 md:z-20 opacity-100"
+      >
+        <a
+          href=""
+          class="nav_logo flex items-center text-xl font-semibold text-white w-28 opacity-100"
+        >
+          <img
+            class="cover-fill mr-3 h-12 w-12 rounded-lg"
+            src="{% static 'images/logo3-removebg.png' %}"
+            alt=""
+          />
+          <div
+            class="console-container flex flex-row text-center text-xl h-12 w-28 relative top-3 left-0 right-0 bottom-0"
+          >
+            <span id="text"></span>
+            <div
+              class="console-underscore inline-block text-white w-4 h-2"
+              id="console"
+            >
+              &#95;
+            </div>
+          </div>
+        </a>
+        <div>
+          <button
+            class="w-28 h-10 bg-green-500 ring-black ring-opacity-80 ring-1 ring-offset-1 ring-offset-black rounded-lg text-white opacity-100 font-semibold text-base mr-3 hover:bg-opacity-80 active:bg-[#AF71FF]"
+            onclick="redirectToLoginPage()"
+            id="login_button"
+          >
+            Log In&nbsp;
+            <i class="fa-solid fa-circle-user" style="color: #ffffff"></i>
+          </button>
+          <button
+            class="w-28 h-10 bg-black ring-white ring-opacity-80 ring-1 ring-offset-1 rounded-lg text-white font-semibold text-base mr-3 relative hover:bg-gray-900 active:bg-[#AF71FF]"
+            onclick="redirectToRegisterPage()"
+            id="register_button"
+          >
+            Register&nbsp;
+            <i class="fa-solid fa-pen-to-square" style="color: #ffffff"></i>
+          </button>
+        </div>
+      </nav>
+    </div>
+    <div class="app">
+      <div class="cardList">
+        <button class="cardList__btn btn btn--left">
+          <div class="icon">
+            <svg>
+              <use xlink:href="#arrow-left"></use>
+            </svg>
+          </div>
+        </button>
+
+        <div class="cards__wrapper">
+          <div class="card current--card">
+            <div class="card__image">
+              <img
+                src="https://images3.alphacoders.com/132/1322308.jpeg"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="card next--card">
+            <div class="card__image">
+              <img src="https://wallpaperaccess.com/full/17350.jpg" alt="" />
+            </div>
+          </div>
+
+          <div class="card previous--card">
+            <div class="card__image">
+              <img
+                src="https://images4.alphacoders.com/131/1314707.jpg"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+        <button class="cardList__btn btn btn--right">
+          <div class="icon">
+            <svg>
+              <use xlink:href="#arrow-right"></use>
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <div class="infoList">
+        <div class="info__wrapper">
+          <div class="info current--info">
+            <h1 class="text name">Anime Chan</h1>
+            <h4 class="text location">Full HD</h4>
+            <p class="text description">Where Reality Meets Anime Fantasy</p>
+          </div>
+
+          <div class="info next--info">
+            <h1 class="text name">Unlimited</h1>
+            <h4 class="text location">access</h4>
+            <p class="text description">Unleash the Anime in Your Videos</p>
+          </div>
+
+          <div class="info previous--info">
+            <h1 class="text name">Totaly</h1>
+            <h4 class="text location">free</h4>
+            <p class="text description">Lights, Camera, Anime Action!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="app__bg">
+        <div class="app__bg__image current--image">
+          <img src="https://images3.alphacoders.com/132/1322308.jpeg" alt="" />
+        </div>
+        <div class="app__bg__image next--image">
+          <img src="https://wallpaperaccess.com/full/17350.jpg" alt="" />
+        </div>
+        <div class="app__bg__image previous--image">
+          <img src="https://images4.alphacoders.com/131/1314707.jpg" alt="" />
+        </div>
+      </div>
+      <div class="text-white relavtive mt-96 -mb-72">
+        <button
+          class="w-40 h-10 bg-green-500 ring-black ring-opacity-80 ring-2 ring-offset-4 ring-offset-black rounded-lg text-white opacity-100 font-semibold text-base hover:bg-opacity-80 active:bg-[#AF71FF]"
+          id="explore_button"
+        >
+          Explore Now&nbsp;
+          <i class="fa-solid fa-meteor" style="color: #ffac38"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="loading__wrapper">
+      <div class="loader--text">Loading...</div>
+      <div class="loader">
+        <span></span>
+      </div>
+    </div>
+
+    <svg class="icons" style="display: none">
+      <symbol
+        id="arrow-left"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <polyline
+          points="328 112 184 256 328 400"
+          style="
+            fill: none;
+            stroke: #fff;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 48px;
+          "
+        />
+      </symbol>
+      <symbol
+        id="arrow-right"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <polyline
+          points="184 112 328 256 184 400"
+          style="
+            fill: none;
+            stroke: #fff;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 48px;
+          "
+        />
+      </symbol>
+    </svg>
+    <div class="support">
+      <a href="https://twitter.com/DevLoop01" target="_blank"
+        ><i class="fab fa-twitter-square"></i
+      ></a>
+      <a href="https://dribbble.com/devloop01" target="_blank"
+        ><i class="fab fa-dribbble"></i
+      ></a>
+    </div>
+  </body>
+</html>

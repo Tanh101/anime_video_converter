@@ -17,7 +17,7 @@ class Command(BaseCommand):
             'role': lambda x: seeder.faker.random_element(['user', 'admin']),
             'status': lambda x: seeder.faker.random_element(['active', 'banned']),
             'created_at': lambda x: self.generate_created_at(),
-            'update_at': lambda x: self.generate_updated_at(),
+            'updated_at': lambda x: self.generate_updated_at(),
         })
         seeder.execute()
         text_art = """

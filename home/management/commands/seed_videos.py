@@ -20,7 +20,7 @@ class Command(BaseCommand):
             'converted_video_path': lambda x: f'path/to/converted_video_{seeder.faker.random_int(min=1, max=10000)}.mp4',
             'status': lambda x: seeder.faker.random_element(['completed', 'pending', 'failed']),
             'created_at': lambda x: self.generate_created_at(),
-            'update_at': lambda x: self.generate_updated_at(),
+            'updated_at': lambda x: self.generate_updated_at(),
         })
 
         seeder.execute()
