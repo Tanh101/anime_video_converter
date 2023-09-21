@@ -36,12 +36,13 @@
                     </div>
                     <div id="drop-down" class="absolute hidden rounded border mt-3 border-gray-300 bg-white shadow-md">
                         <p class="px-4 py-2 font-medium ">{{user_email}}</p>
-                        <form id="logout-form" action="" method="POST" class="d-none">
+                        <!-- <form id="logout-form" action="{% url 'logout' %}" method="POST" class="d-none">
                             {%csrf_token%}
-                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            <button type="submit"  class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" >
                                 Logout
                             </button>
-                        </form>
+                        </form> -->
+                        <a href="{% url 'logout' %}" class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200">Logout</a>
                     </div>
                 </div>
             </nav>
