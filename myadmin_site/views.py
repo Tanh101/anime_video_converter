@@ -8,6 +8,7 @@ from auth_site.models import MyUser
 from django.core.paginator import Paginator
 import requests
 import json
+from django.core.cache import cache
 
 @api_view(['GET'])  
 def video_list(request, pageNumber):
@@ -38,7 +39,11 @@ def vide_detail(request, id):
 
 @api_view(['GET'])
 def user_list(request,pageNumber):
-    users = MyUser.objects.all().order_by('id')
+    users = cache.get('user_list')
+    if users is None:
+        users = MyUser.objects.all().order_by('id')
+        cache.set('user_list', users, 600)
+
     if users.count() == 0:
         response_data = {
         'results': [],

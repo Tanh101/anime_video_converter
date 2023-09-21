@@ -7,3 +7,4 @@ boto3
 requests
 django-seed
 psycopg2-binary
+pymemcache

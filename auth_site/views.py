@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse, JsonResponse
 from rest_framework import permissions, status
+from django.core.cache import cache
 
 @api_view(['GET', 'POST'])
 def login(request):
@@ -63,7 +64,12 @@ def register(request):
             user = MyUser(email=email, password=hashed_password)
             user.save()
 
-            # Chuyển hướng sau khi đăng ký thành công
+            users = MyUser.objects.all().order_by('id')
+            if cache.get('user_list') is not None :
+                cache.delete('user-list')
+            cache.set('user_list', users, 600)
+
+            # Chuyển hướng svscode-file://vscode-app/c:/Users/lyvan/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.htmlau khi đăng ký thành công
             return redirect('login')  # Điều hướng đến trang đăng nhập (cần thiết phải có URL 'login')
         else:
             print(form.errors)
