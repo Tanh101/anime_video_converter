@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('role', models.CharField(default='user', max_length=10)),
                 ('status', models.CharField(default='active', max_length=25)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
             ],
         ),
     ]
