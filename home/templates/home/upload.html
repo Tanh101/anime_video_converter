@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
     <style>
         .has-mask {
             position: absolute;
@@ -24,8 +25,29 @@
     <!-- component -->
     <div class="bg-gradient-to-r from-green-300 via-blue-400 to-blue-300 min-h-screen">
         <header class="header bg-white shadow">
-            <nav class="nav max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-                <a href="/" class="nav_logo text-black font-semibold text-xl">Anime Video</a>
+            <nav class="mx-auto flex max-w-full items-center justify-between px-10 py-4">
+                <a href="/" class="nav_logo flex items-center text-xl font-semibold text-black">
+                    <img class="cover-fill mr-5 h-12 w-12 rounded-3xl" src="{% static 'images/logo2.png' %}" alt="" />
+                    <p>AnimeChan</p>
+                </a>
+                <div class="relative">
+                    <div id="drop-down-btn" class="cursor-pointer flex">
+                        <div class="flex pl-10 justify- text-center items-center">
+                            <img class="cover-fill h-14 w-14 rounded-3xl border" src="{% static 'images/avatar.png' %}"
+                                alt="">
+                            <i class="fas fa-solid fa-caret-down ml-2 mt-1 justify-center text-center"></i>
+                        </div>
+                    </div>
+                    <div id="drop-down" class="absolute hidden rounded border mt-3 border-gray-300 bg-white shadow-md">
+                        <p class="px-4 py-2 font-medium text-center ">{{user_email}}</p>
+                        <form id="logout-form" action="{% url 'logout' %}" method="POST" class="d-none">
+                            {%csrf_token%}
+                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </nav>
         </header>
         <div class="max-w-lg w-full p-10 bg-white rounded-xl mx-auto my-5">
@@ -85,6 +107,21 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+    <script>
+        let isPressed = true;
+        document.getElementById("drop-down-btn").onclick = function () { myFunction() };
+    
+        function myFunction() {
+            if (isPressed) {
+                document.getElementById("drop-down").classList.remove("hidden");
+                isPressed = false;
+            }
+            else {
+                document.getElementById("drop-down").classList.add("hidden");
+                isPressed = true;
+            }
+        }
+    </script>
 </body>
 
 

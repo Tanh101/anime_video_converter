@@ -9,6 +9,7 @@ from .models import Video
 from django.core.paginator import Paginator
 
 def upload(request):
+    user_email = request.session.get('user_email').split('@')[0]
     if request.method == 'POST':
         upload_form = UploadForm(request.POST, request.FILES)
 
@@ -50,7 +51,7 @@ def upload(request):
     else:
         upload_form = UploadForm()
 
-    return render(request, 'home/upload.html', {'upload_form': upload_form})
+    return render(request, 'home/upload.html', {'upload_form': upload_form, 'user_email' : user_email})
 
 def details(request, page_num):
     user_id = request.session.get('user_id')
