@@ -1,3 +1,7 @@
 node_modules
 .env
 __pycache__/
+/ai_model/AnimeGAN.model-60.data-00000-of-00001
+/ai_model/AnimeGAN.model-60.index
+/ai_model/AnimeGAN.model-60.meta
+video/output/
