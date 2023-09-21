@@ -8,3 +8,4 @@ requests
 django-seed
 psycopg2-binary
 pymemcache
+django-redis

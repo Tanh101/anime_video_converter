@@ -11,10 +11,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-    integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://kit.fontawesome.com/YOUR_KIT_CODE.css" integrity="SHA384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" crossorigin="anonymous">
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+        integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://kit.fontawesome.com/YOUR_KIT_CODE.css"
+        integrity="SHA384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" crossorigin="anonymous">
     <style>
         .has-mask {
             position: absolute;
@@ -64,7 +67,8 @@
                         <p class="px-4 py-2 font-medium ">{{user_email}}</p>
                         <form id="logout-form" action="{% url 'logout' %}" method="POST" class="d-none">
                             {%csrf_token%}
-                            <button type="submit"  class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" >
+                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200"
+                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 Logout
                             </button>
                         </form>
@@ -109,8 +113,9 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="w-full bg-gray-200 rounded-full">
-                                    <div class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
-                                        style="width: 45%">45%</div>
+                                    <div id="progress-bar"
+                                        class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
+                                        style="width: 0%; transition: width 0.5s ease-in-out;">0%</div>
                                 </div>
                             </td>
                             {%if videos.status == 'converted' %}
@@ -120,6 +125,28 @@
                             {%endif%}
                         </tr>
                         {%endfor%}
+
+                        <tr class="border-b bg-white hover:bg-gray-50">
+                            <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
+                                1</th>
+                            <td class="px-6 py-4">{{video_name}}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span
+                                    id="upload-status"
+                                    class="inline-block bg-amber-400 text-white px-2 py-1 rounded uppercase">Uploading</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="w-full bg-gray-200 rounded-full">
+                                    <div id="progress-bar"
+                                        class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
+                                        style="width: 0%; transition: width 0.5s ease-in-out;">0%</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm font-medium text-center">
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -134,9 +161,8 @@
                 <a href="/details/{{i}}">{{i}}</a>
                 {%endif%}
                 {%endfor%}
-                {%if page_num < total_page %}
-                <a href="/details/{{ page_num|add:+1 }}">Next</a>
-                {%endif%}
+                {%if page_num < total_page %} <a href="/details/{{ page_num|add:+1 }}">Next</a>
+                    {%endif%}
             </div>
         </div>
     </div>
@@ -168,6 +194,33 @@
             isPressed = true;
         }
     }
+
+    let progressInterval;
+
+    function checkProgress() {
+        fetch(`/upload_progress`)
+            .then(response => response.json())
+            .then(data => {
+                const progressBar = document.getElementById('progress-bar');
+                const uploadStatus = document.getElementById('upload-status');
+                const progressInt = Math.round(data.progress); // Round to the nearest integer
+                const progressPercentage = `${progressInt}%`;
+
+                progressBar.style.width = progressPercentage;
+                progressBar.textContent = progressPercentage;
+
+                if (data.progress >= 100) {
+                    clearInterval(progressInterval);  // Stop the interval
+                    uploadStatus.textContent = 'Uploaded';
+                    uploadStatus.className = 'inline-block bg-green-400 text-white px-2 py-1 rounded uppercase';
+                }
+            })
+            .catch(error => console.log('Error fetching progress:', error));
+    }
+
+    // Call this function periodically
+    progressInterval = setInterval(() => checkProgress(), 1000); // Store the interval ID
+
 </script>
 
 </html>
