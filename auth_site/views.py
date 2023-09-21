@@ -90,3 +90,12 @@ def session_info(request):
     else:
         # Phiên làm việc không tồn tại, đưa người dùng đến trang đăng nhập
         return redirect('login')
+def logout_view(request):
+    if 'user_id' in request.session:
+        # Xóa hết các thông tin trong session
+        request.session.clear()
+        # Điều hướng đến trang đăng nhập sau khi logout
+        return redirect('login')
+    else:
+        # Người dùng chưa đăng nhập, điều hướng đến trang đăng nhập
+        return redirect('login')
