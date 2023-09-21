@@ -41,7 +41,8 @@ $(document).ready(function () {
                 $('#current_page_number').html(pageNumber);
                 $('#total_pages').html(data.num_pages);
                 if(data.results.length == 0 || data.num_pages == 1){
-                    nextButton.classList.add('hidden');
+                    nextButton.classList.add('opacity-0');
+                    nextButton.disabled = true;
                     currentPageElement.classList.add('hidden');
                     if(data.results.length == 0) {
                         titlePage.classList.add('hidden');
@@ -58,7 +59,8 @@ $(document).ready(function () {
                         resultsNumber.innerHTML = "Results: " + data.count;
                     }
                 } else {
-                    nextButton.classList.remove('hidden');
+                    nextButton.classList.remove('opacity-0');
+                    nextButton.disabled = false;
                     currentPageElement.classList.remove('hidden');
                     titlePage.classList.remove('hidden');
                     titleOf.classList.remove('hidden');
@@ -69,7 +71,8 @@ $(document).ready(function () {
                 if(pageNumber == 1)
                 previousButton.classList.add('hidden');
                 if(pageNumber == data.num_pages)
-                 { nextButton.classList.add('hidden'); }
+                 { nextButton.classList.add('opacity-0');
+                 nextButton.disabled = true; }
                 $.each(data.results, function (index, video) {
                     var videoStatusColor
                     var customDate = formatCustomDate(video.created_at);
@@ -115,7 +118,8 @@ $(document).ready(function () {
                 $('#current_page_number').html(pageNumber);
                 $('#total_pages').html(data.num_pages); 
                 if(data.results.length == 0 || data.num_pages == 1){
-                    nextButton.classList.add('hidden');
+                    nextButton.classList.add('opacity-0');
+                    nextButton.disabled = true;
                     currentPageElement.classList.add('hidden');
                     if(data.results.length == 0) {
                         titlePage.classList.add('hidden');
@@ -132,7 +136,8 @@ $(document).ready(function () {
                         resultsNumber.innerHTML = "Results: " + data.count;
                     }
                 } else {
-                    nextButton.classList.remove('hidden');
+                    nextButton.classList.remove('opacity-0');
+                    nextButton.disabled = false;
                     currentPageElement.classList.remove('hidden');
                     titlePage.classList.remove('hidden');
                     titleOf.classList.remove('hidden');
@@ -143,7 +148,8 @@ $(document).ready(function () {
                 if(pageNumber == 1)
                 previousButton.classList.add('hidden');
                 if(pageNumber == data.num_pages)
-                { nextButton.classList.add('hidden'); }
+                { nextButton.classList.add('opacity-0');
+                nextButton.disabled = true; }
                 $.each(data.results, function (index, user) {
                     var userStatusColor = user.status == 'banned' ? 'rose-500' : 'green-500';
                     var buttonColor = user.status == 'banned' ? 'blue' : 'red';
@@ -290,7 +296,8 @@ $(document).ready(function () {
                         $('#current_page_number').html(pageNumber);
                         $('#total_pages').html(data.num_pages);
                         if(data.results.length == 0 || data.num_pages == 1){
-                            nextButton.classList.add('hidden');
+                            nextButton.classList.add('opacity-0');
+                            nextButton.disabled = true;
                             currentPageElement.classList.add('hidden');
                             if(data.results.length == 0) {
                                 titlePage.classList.add('hidden');
@@ -307,7 +314,8 @@ $(document).ready(function () {
                                 resultsNumber.innerHTML = "Results: " + data.count;
                             }
                         } else {
-                            nextButton.classList.remove('hidden');
+                            nextButton.classList.remove('opacity-0');
+                            nextButton.disabled = false;
                             currentPageElement.classList.remove('hidden');
                             titlePage.classList.remove('hidden');
                             titleOf.classList.remove('hidden');
@@ -318,7 +326,8 @@ $(document).ready(function () {
                         if(pageNumber == 1)
                         previousButton.classList.add('hidden')
                         if(pageNumber == data.num_pages)
-                        { nextButton.classList.add('hidden'); }
+                        { nextButton.classList.add('opacity-0');
+                        nextButton.disabled = true; }
                         // Display search results in the 'searchResults' div
                         $.each(data.results, function (index, user) {
                             // Determine the button color based on the user's status
@@ -354,7 +363,8 @@ $(document).ready(function () {
                     $('#current_page_number').html(pageNumber);
                     $('#total_pages').html(data.num_pages); 
                     if(data.results.length == 0 || data.num_pages == 1){
-                        nextButton.classList.add('hidden');
+                        nextButton.classList.add('opacity-0');
+                        nextButton.disabled = true;
                         currentPageElement.classList.add('hidden');
                         if(data.results.length == 0) {
                             titlePage.classList.add('hidden');
@@ -371,7 +381,8 @@ $(document).ready(function () {
                             resultsNumber.innerHTML = "Results: " + data.count;
                         }
                     } else {
-                        nextButton.classList.remove('hidden');
+                        nextButton.classList.remove('opacity-0');
+                        nextButton.disabled = false;
                         currentPageElement.classList.remove('hidden');
                         titlePage.classList.remove('hidden');
                         titleOf.classList.remove('hidden');
@@ -382,7 +393,8 @@ $(document).ready(function () {
                     if(pageNumber == 1)
                     previousButton.classList.add('hidden')
                     if(pageNumber == data.num_pages)
-                    { nextButton.classList.add('hidden'); }
+                    { nextButton.classList.add('opacity-0');
+                    nextButton.disabled = true; }
                     $.each(data.results, function (index, video) {
                         var videoStatusColor
                         var customDate = formatCustomDate(video.created_at);
@@ -419,13 +431,17 @@ $(document).ready(function () {
         var pageNumber
         if(type == "Next"){
             pageNumber = parseInt(currentPageElement.innerHTML) + 1;
-            if (pageNumber == totalPages) { nextButton.classList.add('hidden') };
+            if (pageNumber == totalPages) 
+            { nextButton.classList.add('opacity-0');
+            nextButton.disabled = true; };
             if (pageNumber > 1) { previousButton.classList.remove('hidden') }
         }
         else {
             pageNumber = parseInt(currentPageElement.innerHTML) - 1;
             if(pageNumber == 1){ previousButton.classList.add('hidden') } }; 
-            if (pageNumber < totalPages) { nextButton.classList.remove('hidden') };
+            if (pageNumber < totalPages) 
+            { nextButton.classList.remove('opacity-0');
+            nextButton.disabled = false; };
 
         currentPageElement.innerHTML = pageNumber;
         if (table.classList.contains('search_table')) {
@@ -450,20 +466,19 @@ $(document).ready(function () {
     });
     });
 function banUser(userId) {
-        // Make an AJAX request to your API to change the user's status to "Banned"
         $.ajax({
-            url: 'users/' + userId + '/ban/',  // Replace with your API endpoint URL
-            method: 'PUT',  // Use the appropriate HTTP method (PUT or PATCH) for your API
+            url: 'users/' + userId + '/ban/', 
+            method: 'PUT',  
             success: function (data) {
-                // Update the user's status in the table
                 const statusCell = document.querySelector(`#data_table tbody tr[data-user-id="${userId}"] td:nth-child(3) h4`);
-                if(statusCell.textContent =='Active')
+                if(statusCell.textContent == 'Active')
                 {statusCell.textContent = 'Banned';
                 statusCell.classList.remove('bg-green-500');
-                statusCell.classList.add('bg-red-500');
+                statusCell.classList.add('bg-rose-500');
                 }
-                else {statusCell.textContent = 'Active';
-                statusCell.classList.remove('bg-red-500');
+                else if(statusCell.textContent == 'Banned')
+                {statusCell.textContent = 'Active';
+                statusCell.classList.remove('bg-rose-500');
                 statusCell.classList.add('bg-green-500');
                 }
                 const button = document.querySelector(`#data_table tbody tr[data-user-id="${userId}"] td:nth-child(4) button`);

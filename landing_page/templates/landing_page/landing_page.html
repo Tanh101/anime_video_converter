@@ -43,16 +43,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.3/gsap.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
   </head>
-  <body>
+  <body class="min-h-0 md:min-h-full">
     <div
-      class="absolute top-0 left-0 right-0 w-full h-20 bg-[#050506] bg-opacity-70 shadow"
+      class="w-full absolute top-0 left-0 right-0 w-full h-20 bg-[#050506] bg-opacity-70 shadow min-w-min"
     >
       <nav
-        class="sticky flex w-full flex-wrap items-center justify-between p-4 p-4 md:top-0 md:z-20 opacity-100"
+        class="sticky flex w-full flex-wrap items-center justify-between p-4 p-4 md:top-0 md:z-20 opacity-100 min-w-max"
       >
         <a
           href=""
-          class="nav_logo flex items-center text-xl font-semibold text-white w-28 opacity-100"
+          class="nav_logo flex items-center text-xl font-semibold text-white w-28 opacity-100 min-w-max relative mr-14"
         >
           <img
             class="cover-fill mr-3 h-12 w-12 rounded-lg"
@@ -60,7 +60,7 @@
             alt=""
           />
           <div
-            class="console-container flex flex-row text-center text-xl h-12 w-28 relative top-3 left-0 right-0 bottom-0"
+            class="console-container flex flex-row text-center text-xl h-12 w-28 relative top-3 left-0 right-0 bottom-0 min-w-full"
           >
             <span id="text"></span>
             <div
@@ -71,7 +71,7 @@
             </div>
           </div>
         </a>
-        <div>
+        <div class="min-w-min relative">
           <button
             class="w-28 h-10 bg-green-500 ring-black ring-opacity-80 ring-1 ring-offset-1 ring-offset-black rounded-lg text-white opacity-100 font-semibold text-base mr-3 hover:bg-opacity-80 active:bg-[#AF71FF]"
             onclick="redirectToLoginPage()"
@@ -91,8 +91,13 @@
         </div>
       </nav>
     </div>
-    <div class="app">
-      <div class="cardList">
+    <div class="app min-w-max flex flex-col">
+      <h2
+        class="text-white text-3xl font-medium font-[montserrat] tracking-widest relative -top-72 min-w-min"
+      >
+        VIDEO TO ANIME CONVERTER
+      </h2>
+      <div class="cardList min-w-max positon relative">
         <button class="cardList__btn btn btn--left">
           <div class="icon">
             <svg>
@@ -100,7 +105,6 @@
             </svg>
           </div>
         </button>
-
         <div class="cards__wrapper">
           <div class="card current--card">
             <div class="card__image">
@@ -157,7 +161,7 @@
         </div>
       </div>
 
-      <div class="app__bg">
+      <div class="app__bg min-w-max">
         <div class="app__bg__image current--image">
           <img src="https://images3.alphacoders.com/132/1322308.jpeg" alt="" />
         </div>
@@ -168,7 +172,7 @@
           <img src="https://images4.alphacoders.com/131/1314707.jpg" alt="" />
         </div>
       </div>
-      <div class="text-white relavtive mt-96 -mb-72">
+      <div class="text-white relavtive mt-80 -mb-72">
         <button
           class="w-40 h-10 bg-green-500 ring-black ring-opacity-80 ring-2 ring-offset-4 ring-offset-black rounded-lg text-white opacity-100 font-semibold text-base hover:bg-opacity-80 active:bg-[#AF71FF]"
           id="explore_button"
