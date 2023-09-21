@@ -77,9 +77,14 @@
             <div class="my-5 flex justify-between">
                 <h2 class="mb-2 text-2xl font-bold">Convert Process</h2>
             </div>
-            <div class="flex mb-6 text-center items-center">
-                <h3 class="text-md ">Total Results: </h3>
-                <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
+            <div class="flex mb-6 text-center items-center justify-between">
+                <div class="flex">
+                    <h3 class="text-md ">Total Results: </h3>
+                    <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
+                </div>
+                <div class="flex">
+                    <a class="rounded-xl bg-blue-500 hover:bg-orange-400 px-4 py-2 font-medium text-lg text-white" href="/upload">New File</a>
+                </div>      
             </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-left text-sm text-gray-500">
