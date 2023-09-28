@@ -4,6 +4,7 @@ from .forms import UploadForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.conf import settings
+from auth_site.models import MyUser
 import boto3
 from boto3.s3.transfer import S3Transfer
 from .models import Video
@@ -13,36 +14,89 @@ from django.core.cache import cache
 import uuid
 from tempfile import NamedTemporaryFile
 import shutil
+import queue
+import time
+
+# The queue to hold upload tasks
+upload_queue = queue.Queue()
+
+# The worker function
+def worker():
+    while True:
+        task = upload_queue.get()
+        if task is None:
+            # sentinel value to exit loop
+            break
+        s3_client, temp_file_path, s3_video_key, cache_key, video_file_size = task
+        print(f"Uploading {temp_file_path} to {s3_video_key}")
+        threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key, video_file_size)
+        upload_queue.task_done()
+        time.sleep(10)
+
+# Number of worker threads
+NUM_WORKERS = 1
+
+# Start the worker threads
+for i in range(NUM_WORKERS):
+    t = threading.Thread(target=worker)
+    t.daemon = True
+    t.start()
+    print(f"Started worker thread {t.name}")
 
 # Upload progress tracking
 def progress_callback(bytes_transferred, cache_key):
     current_progress = cache.get(cache_key, 0)
     new_progress = current_progress + bytes_transferred
+    print(f"Progress: {new_progress}")
     cache.set(cache_key, new_progress)
 
 # Separate thread for uploading
-def threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key):
+def threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key, video_file_size):
     transfer = S3Transfer(s3_client)
     transfer.upload_file(temp_file_path, settings.AWS_STORAGE_BUCKET_NAME, s3_video_key, 
                         callback=lambda x: progress_callback(x, cache_key))
+    # Explicitly set to 100% on completion
+    cache.set(cache_key, video_file_size)
+
+    # Update Video instance after a successful upload
+    video_instance = Video.objects.get(pk=cache_key)
+    video_instance.original_video_path = s3_video_key  # Set the s3_video_key
+    video_instance.save()  # Save the changes to the database
+
+    cache.set(f"{cache_key}_original_path", s3_video_key)
 
 def upload(request):
-    user_email = request.session.get('user_email').split('@')[0]
+    # user_email = request.session.get('user_email').split('@')[0]
     if request.method == 'POST':
+        user_id = request.session.get('user_id')
         upload_form = UploadForm(request.POST, request.FILES)
         if upload_form.is_valid():
-            # ...
+
             video_file = request.FILES['file']
             s3_video_key = f"videos/{video_file.name}"
-            cache_key = str(uuid.uuid4())
+        
+            cache_keys = request.session.get('upload_cache_keys', [])
+
+            user_instance = MyUser.objects.get(pk=user_id)
             
+            video = Video(
+                user=user_instance,
+                name=video_file.name,
+                status="uploading"
+            )
+            video.save()
+            
+            cache_key = str(video.id)  # Using the video's id as the cache key
+            cache_keys.append(cache_key)
+
             # Initialize progress in cache
             cache.set(cache_key, 0)
             cache.set(f"{cache_key}_total", video_file.size)
+            cache.set(f"{cache_key}_name", video_file.name)  # Storing video name in cache
 
-            # Save cache_key to session for tracking upload progress
-            request.session['upload_cache_key'] = cache_key
-            
+            # Save cache keys to session for tracking upload progress
+            request.session['upload_cache_keys'] = cache_keys
+
             # Create a temporary file to save the uploaded file
             temp_file = NamedTemporaryFile(delete=False)
             for chunk in video_file.chunks():
@@ -56,24 +110,59 @@ def upload(request):
                 region_name=settings.AWS_S3_REGION_NAME,
             )
 
-            t = threading.Thread(target=threaded_upload, args=(s3_client, temp_file.name, s3_video_key, cache_key))
-            t.start()
-            # ...
-            return redirect('details', page_num=1, video_name=video_file.name.split('.')[0])
+            # Add to queue instead of direct threading
+            upload_queue.put((s3_client, temp_file.name, s3_video_key, cache_key, video_file.size))
+            
+            return redirect('details', page_num=1)
+        else:
+            for field, err in upload_form.errors.items():
+                messages.error(request, err)
     else:
         upload_form = UploadForm()
 
-    return render(request, 'home/upload.html', {'upload_form': upload_form, 'user_email' : user_email})
+    return render(request, 'home/upload.html', {'upload_form': upload_form})
 
-# Add a Django view to return the upload progress
 def upload_progress_view(request):
-    cache_key = request.session.get('upload_cache_key', '')
-    progress = cache.get(cache_key, 0)
-    total_size = cache.get(f"{cache_key}_total", 1)  # Use 1 to avoid division by zero
-    percentage = (progress / total_size) * 100
-    return JsonResponse({"progress": percentage})
+    cache_keys = request.session.get('upload_cache_keys', [])
+    
+    progress_data = []
+    for cache_key in cache_keys:
+        progress = cache.get(cache_key)
+        total_size = cache.get(f"{cache_key}_total")
+        video_name = cache.get(f"{cache_key}_name")
+        original_path = cache.get(f"{cache_key}_original_path")
 
-def details(request, page_num, video_name=''):
+        download_url = None
+        if (original_path is not None):
+            download_url = settings.CLOUDFRONT_DOMAIN + "/" + original_path
+
+        print(f"Download URL: {original_path}")
+
+        # If any cache data is missing, skip this cache_key
+        if None in [progress, total_size, video_name]:
+            continue
+
+        status = "uploading"
+        percentage = (progress / total_size) * 100
+        if percentage == 100:
+            status = "uploaded"
+
+        file_data = {
+            "key": cache_key,
+            "progress": percentage,
+            "video_id": cache_key,
+            "name": video_name,
+            "status": status
+        }
+
+        if download_url:
+            file_data["download_url"] = download_url
+
+        progress_data.append(file_data)
+
+    return JsonResponse({"files": progress_data})
+
+def details(request, page_num):
     user_id = request.session.get('user_id')
     user_email = request.session.get('user_email').split('@')[0]
 
@@ -98,4 +187,4 @@ def details(request, page_num, video_name=''):
     page = paginator.get_page(page_num)
     
 
-    return render(request, 'home/details.html', {'page_num' : page_num, 'page': page, 'total_count': total_count, 'total_page': total_page, 'page_array': page_array, 'user_email' : user_email, 'video_name': video_name})
+    return render(request, 'home/details.html', {'page_num' : page_num, 'page': page, 'total_count': total_count, 'total_page': total_page, 'page_array': page_array, 'user_email' : user_email})

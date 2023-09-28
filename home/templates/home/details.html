@@ -82,13 +82,14 @@
                 <h2 class="mb-2 text-2xl font-bold">Convert Process</h2>
             </div>
             <div class="flex mb-6 text-center items-center justify-between">
-                <div class="flex">
+                <!-- <div class="flex">
                     <h3 class="text-md ">Total Results: </h3>
                     <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
-                </div>
+                </div> -->
                 <div class="flex">
-                    <a class="rounded-xl bg-blue-500 hover:bg-orange-400 px-4 py-2 font-medium text-lg text-white" href="/upload">New File</a>
-                </div>      
+                    <a class="rounded-xl bg-blue-500 hover:bg-orange-400 px-4 py-2 font-medium text-lg text-white"
+                        href="/upload">New File</a>
+                </div>
             </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-left text-sm text-gray-500">
@@ -101,8 +102,8 @@
                             <th scope="col" class="text-center px-6 py-3">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {%for videos in page%}
+                    <tbody id="process_list">
+                        <!-- {%for videos in page%}
                         <tr class="border-b bg-white hover:bg-gray-50">
                             <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                                 {{forloop.counter}}</th>
@@ -124,9 +125,9 @@
                             </td>
                             {%endif%}
                         </tr>
-                        {%endfor%}
+                        {%endfor%} -->
 
-                        <tr class="border-b bg-white hover:bg-gray-50">
+                        <!-- <tr class="border-b bg-white hover:bg-gray-50">
                             <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                                 1</th>
                             <td class="px-6 py-4">{{video_name}}</td>
@@ -145,12 +146,12 @@
                             <td class="px-6 py-4 text-sm font-medium text-center">
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
                             </td>
-                        </tr>
+                        </tr> -->
 
                     </tbody>
                 </table>
             </div>
-            <div class="pagination pagination-style-three mt-10 flex justify-end">
+            <!-- <div class="pagination pagination-style-three mt-10 flex justify-end">
                 {%if page_num > 1 %}
                 <a href="/details/{{ page_num|add:-1 }}">Prev</a>
                 {%endif%}
@@ -163,7 +164,7 @@
                 {%endfor%}
                 {%if page_num < total_page %} <a href="/details/{{ page_num|add:+1 }}">Next</a>
                     {%endif%}
-            </div>
+            </div> -->
         </div>
     </div>
 </body>
@@ -195,31 +196,108 @@
         }
     }
 
-    let progressInterval;
-
-    function checkProgress() {
-        fetch(`/upload_progress`)
-            .then(response => response.json())
-            .then(data => {
-                const progressBar = document.getElementById('progress-bar');
-                const uploadStatus = document.getElementById('upload-status');
-                const progressInt = Math.round(data.progress); // Round to the nearest integer
-                const progressPercentage = `${progressInt}%`;
-
-                progressBar.style.width = progressPercentage;
-                progressBar.textContent = progressPercentage;
-
-                if (data.progress >= 100) {
-                    clearInterval(progressInterval);  // Stop the interval
-                    uploadStatus.textContent = 'Uploaded';
-                    uploadStatus.className = 'inline-block bg-green-400 text-white px-2 py-1 rounded uppercase';
-                }
-            })
-            .catch(error => console.log('Error fetching progress:', error));
+    function getStatusClass(status) {
+        switch (status) {
+            case 'uploading':
+                return 'bg-amber-400 text-white';
+            case 'uploaded':
+                return 'bg-green-400 text-white';
+            case 'failed':
+                return 'bg-red-400 text-white';
+            case 'processing':
+                return 'bg-blue-400 text-white';
+            default:
+                return 'bg-gray-400 text-white';
+        }
     }
 
-    // Call this function periodically
-    progressInterval = setInterval(() => checkProgress(), 1000); // Store the interval ID
+    $(document).ready(function () {
+        function updateProgress() {
+            // Fetch progress data from the backend
+            $.ajax({
+                url: '/upload_progress',  // Change this to the actual URL of your upload_progress_view
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    let allCompleted = true;  // Flag to check if all uploads are completed
+                    let videoIds = [];  // To keep track of video_ids in the current response
+
+                    response.files.forEach(function (file) {
+                        const progress = file.progress;
+                        const progressBarWidth = `${Math.round(progress)}%`;
+                        const statusText = file.status;
+                        const statusClass = getStatusClass(statusText);
+
+                        videoIds.push(String(file.video_id));  // Update videoIds array
+
+                        let actionHtml = '<i class="fa fa-spinner fa-spin"></i>'; // Default to spinning icon
+                        if (file.download_url) {
+                            actionHtml = `<a href="https://${file.download_url}" class="text-indigo-600 hover:text-indigo-900">Download</a>`;
+                        }
+
+                        // Check if row for this video already exists
+                        let $row = $('#process_list').find(`[data-video-id="${file.video_id}"]`);
+
+                        if (!$row.length) {  // If row does not exist, create it
+                            $row = $(`
+                                <tr data-video-id="${file.video_id}" class="border-b bg-white hover:bg-gray-50">
+                                    <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">${file.video_id}</th>
+                                    <td class="px-6 py-4">${file.name}</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="inline-block ${statusClass} px-2 py-1 rounded uppercase">${statusText}</span>  <!-- Display the status with color here -->
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="w-full bg-gray-200 rounded-full">
+                                            <div class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
+                                                style="width: ${progressBarWidth}; transition: width 0.5s ease-in-out;">${progressBarWidth}</div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-medium text-center">
+                                        ${actionHtml}
+                                    </td>
+                                </tr>
+                            `);
+                            $('#process_list').append($row);
+                        } else {
+                            // Update the progress bar width
+                            $row.find('.bg-green-600').css('width', progressBarWidth).text(progressBarWidth);
+                            // Update the status text and class
+                            $row.find('span.inline-block').removeClass().addClass(`inline-block ${statusClass} px-2 py-1 rounded uppercase`).text(statusText);
+                            // Update the action column
+                            if (file.download_url) {
+                                $row.find('td:last-child').html(actionHtml);
+                            }
+                        }
+
+                        if (file.progress < 100) {
+                            allCompleted = false;
+                        }
+                    });
+
+                    // Remove rows for videos that are not in the current response
+                    $('#process_list tr').each(function () {
+                        const $thisRow = $(this);
+                        const videoId = String($thisRow.data('video-id'));  // Convert to string when reading data attribute
+                        if (videoIds.indexOf(videoId) === -1) {
+                            $thisRow.remove();
+                        }
+                    });
+
+                    if (allCompleted) {
+                        clearInterval(updateInterval);
+                    }
+                }
+
+            });
+        }
+
+        // Call the function initially
+        updateProgress();
+
+        // Update every 5 seconds, keep the interval reference so we can clear it later
+        const updateInterval = setInterval(updateProgress, 1000);
+    });
+
 
 </script>
 
