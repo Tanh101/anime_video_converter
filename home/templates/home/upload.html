@@ -10,9 +10,13 @@
     <title>Upload</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+        integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+        crossorigin="anonymous"></script>
     <style>
         .has-mask {
             position: absolute;
@@ -42,7 +46,8 @@
                         <p class="px-4 py-2 font-medium text-center ">{{user_email}}</p>
                         <form id="logout-form" action="{% url 'logout' %}" method="POST" class="d-none">
                             {%csrf_token%}
-                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            <button class="dropdown-item block px-10 py-2 text-gray-800 hover:bg-slate-200"
+                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 Logout
                             </button>
                         </form>
@@ -83,6 +88,13 @@
                 <p class="text-sm text-gray-300">
                     <span>File type: mp4,mov</span>
                 </p>
+                <div id="filename-display" class="mt-4 p-2 border bg-white hidden rounded shadow-md flex items-center max-w-full">
+                    <span class="mr-2">
+                        <i class="fas fa-file-alt text-gray-400"></i>
+                    </span>
+                    <span id="actual-filename" class="truncate w-full"></span>
+                </div>
+
                 <div>
                     <button type="submit"
                         class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
@@ -95,22 +107,22 @@
     </div>
 
     {% if messages %}
-        {% for message in messages %}
-            {% if message.tags == 'success'%}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'info' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'warning' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% elif message.tags == 'error' %}
-                <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
-            {% endif %}
-        {% endfor %}
+    {% for message in messages %}
+    {% if message.tags == 'success'%}
+    <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% elif message.tags == 'info' %}
+    <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% elif message.tags == 'warning' %}
+    <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% elif message.tags == 'error' %}
+    <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+    {% endif %}
+    {% endfor %}
     {% endif %}
     <script>
         let isPressed = true;
         document.getElementById("drop-down-btn").onclick = function () { myFunction() };
-    
+
         function myFunction() {
             if (isPressed) {
                 document.getElementById("drop-down").classList.remove("hidden");
@@ -121,6 +133,24 @@
                 isPressed = true;
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.querySelector('#id_file');
+            const filenameDisplay = document.querySelector('#filename-display');
+            const actualFilename = document.querySelector('#actual-filename');
+
+            fileInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    actualFilename.textContent = file.name;
+                    filenameDisplay.classList.remove('hidden');
+                } else {
+                    actualFilename.textContent = '';
+                    filenameDisplay.classList.add('hidden');
+                }
+            });
+        });
+
     </script>
 </body>
 
