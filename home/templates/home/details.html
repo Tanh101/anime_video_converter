@@ -77,15 +77,11 @@
             </nav>
         </header>
 
-        <div class="flex flex-col bg-white p-6 rounded-xl mx-12 my-6">
+        <div class="flex flex-col bg-white p-6 rounded-xl mx-12 mt-6">
             <div class="my-5 flex justify-between">
                 <h2 class="mb-2 text-2xl font-bold">Convert Process</h2>
             </div>
             <div class="flex mb-6 text-center items-center justify-between">
-                <!-- <div class="flex">
-                    <h3 class="text-md ">Total Results: </h3>
-                    <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
-                </div> -->
                 <div class="flex">
                     <a class="rounded-xl bg-blue-500 hover:bg-orange-400 px-4 py-2 font-medium text-lg text-white"
                         href="/upload">New File</a>
@@ -103,7 +99,30 @@
                         </tr>
                     </thead>
                     <tbody id="process_list">
-                        <!-- {%for videos in page%}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="my-5 flex justify-between">
+                <h2 class="text-2xl font-bold">Convert History</h2>
+            </div>
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
+                <div class="flex">
+                        <h3 class="text-md ">Total Results: </h3>
+                        <span class="ml-2 text-medium text-stone-700 bg-emerald-300 rounded-lg p-1">{{total_count}}</span>
+                </div>
+                <table class="w-full text-left text-sm text-gray-500 ">
+                    <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">No.</th>
+                            <th scope="col" class="px-6 py-3">Name</th>
+                            <th scope="col" class="text-center px-6 py-3">Status</th>
+                            <th scope="col" class="text-center px-6 py-3">Progress</th>
+                            <th scope="col" class="text-center px-6 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="">
+                        {%for videos in page%}
                         <tr class="border-b bg-white hover:bg-gray-50">
                             <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
                                 {{forloop.counter}}</th>
@@ -116,7 +135,7 @@
                                 <div class="w-full bg-gray-200 rounded-full">
                                     <div id="progress-bar"
                                         class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
-                                        style="width: 0%; transition: width 0.5s ease-in-out;">0%</div>
+                                        style="width: 100%; transition: width 0.5s ease-in-out;">100%</div>
                                 </div>
                             </td>
                             {%if videos.status == 'converted' %}
@@ -125,33 +144,11 @@
                             </td>
                             {%endif%}
                         </tr>
-                        {%endfor%} -->
-
-                        <!-- <tr class="border-b bg-white hover:bg-gray-50">
-                            <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">
-                                1</th>
-                            <td class="px-6 py-4">{{video_name}}</td>
-                            <td class="px-6 py-4 text-center">
-                                <span
-                                    id="upload-status"
-                                    class="inline-block bg-amber-400 text-white px-2 py-1 rounded uppercase">Uploading</span>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="w-full bg-gray-200 rounded-full">
-                                    <div id="progress-bar"
-                                        class="bg-green-600 text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
-                                        style="width: 0%; transition: width 0.5s ease-in-out;">0%</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-sm font-medium text-center">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
-                            </td>
-                        </tr> -->
-
+                        {%endfor%}
                     </tbody>
                 </table>
             </div>
-            <!-- <div class="pagination pagination-style-three mt-10 flex justify-end">
+            <div class="pagination pagination-style-three mt-10 flex justify-end">
                 {%if page_num > 1 %}
                 <a href="/details/{{ page_num|add:-1 }}">Prev</a>
                 {%endif%}
@@ -163,8 +160,8 @@
                 {%endif%}
                 {%endfor%}
                 {%if page_num < total_page %} <a href="/details/{{ page_num|add:+1 }}">Next</a>
-                    {%endif%}
-            </div> -->
+                {%endif%}
+            </div>
         </div>
     </div>
 </body>

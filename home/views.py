@@ -169,7 +169,7 @@ def details(request, page_num):
     if(not user_id):
         return redirect("/login")
     
-    items_per_page = 5
+    items_per_page = 2
 
     start_index = (page_num - 1) * items_per_page
     end_index = start_index + items_per_page
