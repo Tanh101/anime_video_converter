@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'anime_video_converter.wsgi.application'
+ASGI_APPLICATION  = 'anime_video_converter.asgi.application'
 
 
 # Database
@@ -151,8 +153,16 @@ AWS_QUERYSTRING_AUTH = False
 
 CLOUDFRONT_DOMAIN = os.getenv('CLOUDFRONT_DOMAIN')
 
+FLASK_DOMAIN = os.getenv('FLASK_DOMAIN')
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }

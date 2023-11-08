@@ -9,3 +9,7 @@ django-seed
 psycopg2-binary
 pymemcache
 django-redis
+channels
+channels-redis
+websockets
+channels[daphne]
