@@ -32,11 +32,17 @@ def worker():
         if task is None:
             # sentinel value to exit loop
             break
-        s3_client, temp_file_path, s3_video_key, cache_key, video_file_size = task
+        video, s3_client, temp_file_path, s3_video_key, cache_key, video_file_size = task
         print(f"Uploading {temp_file_path} to {s3_video_key}")
-        threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key, video_file_size)
-        upload_queue.task_done()
-        time.sleep(10)
+        cache.set(f"{cache_key}_status", "uploading")
+        threaded_upload(video, s3_client, temp_file_path, s3_video_key, cache_key, video_file_size)
+        while True:
+            download_url = cache.get(f"{cache_key}_download_url")
+            if download_url:
+                upload_queue.task_done()
+                break
+            time.sleep(1)
+        time.sleep(1)
 
 # Number of worker threads
 NUM_WORKERS = 1
@@ -56,19 +62,17 @@ def progress_callback(bytes_transferred, cache_key):
     cache.set(cache_key, new_progress)
 
 # Separate thread for uploading
-def threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key, video_file_size):
+def threaded_upload(video, s3_client, temp_file_path, s3_video_key, cache_key, video_file_size):
     transfer = S3Transfer(s3_client)
     transfer.upload_file(temp_file_path, settings.AWS_STORAGE_BUCKET_NAME, s3_video_key, 
                         callback=lambda x: progress_callback(x, cache_key))
     # Explicitly set to 100% on completion
     cache.set(cache_key, video_file_size)
 
-    # Update Video instance after a successful upload
-    video_instance = Video.objects.get(pk=cache_key)
-    video_instance.original_video_path = s3_video_key  # Set the s3_video_key
-    video_instance.save()  # Save the changes to the database
-
     download_url = "https://" + settings.CLOUDFRONT_DOMAIN + "/" + s3_video_key
+    video.original_video_path = download_url
+    video.status = "processing"
+    video.save()
     # Send a message to the websocket
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
@@ -116,7 +120,7 @@ def upload(request):
             cache.set(cache_key, 0)
             cache.set(f"{cache_key}_total", video_file.size)
             cache.set(f"{cache_key}_name", video_file.name)  # Storing video name in cache
-            cache.set(f"{cache_key}_status", "uploading")
+            cache.set(f"{cache_key}_status", "queueing")
 
             # Save cache keys to session for tracking upload progress
             request.session['upload_cache_keys'] = cache_keys
@@ -135,7 +139,7 @@ def upload(request):
             )
 
             # Add to queue instead of direct threading
-            upload_queue.put((s3_client, temp_file.name, s3_video_key, cache_key, video_file.size))
+            upload_queue.put((video, s3_client, temp_file.name, s3_video_key, cache_key, video_file.size))
             
             return redirect('details', page_num=1)
         else:
@@ -178,6 +182,10 @@ def upload_progress_view(request):
         }
 
         if download_url:
+            video = Video.objects.get(pk=cache_key)
+            video.converted_video_path = download_url
+            video.status = "converted"
+            video.save()
             file_data["download_url"] = download_url
 
         progress_data.append(file_data)

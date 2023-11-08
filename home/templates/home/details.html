@@ -197,7 +197,7 @@
         switch (status) {
             case 'uploading':
                 return 'bg-amber-400 text-white';
-            case 'uploaded':
+            case 'converted':
                 return 'bg-green-400 text-white';
             case 'failed':
                 return 'bg-red-400 text-white';
@@ -219,7 +219,7 @@
                     let allCompleted = true;  // Flag to check if all uploads are completed
                     let videoIds = [];  // To keep track of video_ids in the current response
 
-                    response.files.forEach(function (file) {
+                    response.files.forEach(function (file, index) {
                         const progress = file.progress;
                         const progressBarWidth = `${Math.round(progress)}%`;
                         const statusText = file.status;
@@ -238,7 +238,7 @@
                         if (!$row.length) {  // If row does not exist, create it
                             $row = $(`
                                 <tr data-video-id="${file.video_id}" class="border-b bg-white hover:bg-gray-50">
-                                    <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">${file.video_id}</th>
+                                    <th scope="row" class="whitespace-nowrap px-6 py-4 font-medium text-gray-900">${index + 1}</th>
                                     <td class="px-6 py-4">${file.name}</td>
                                     <td class="px-6 py-4 text-center">
                                         <span class="inline-block ${statusClass} px-2 py-1 rounded uppercase">${statusText}</span>  <!-- Display the status with color here -->
@@ -265,8 +265,6 @@
                                 $row.find('td:last-child').html(actionHtml);
                             }
                         }
-                        console.log(file.progress, file.status);
-                        console.log(file.download_url);
                         // if (file.progress < 100 || file.status !== 'converted') {
                         if (file.download_url === undefined) {
                             allCompleted = false;
