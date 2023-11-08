@@ -16,6 +16,11 @@ from tempfile import NamedTemporaryFile
 import shutil
 import queue
 import time
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+import websockets
+import asyncio
+import json
 
 # The queue to hold upload tasks
 upload_queue = queue.Queue()
@@ -47,7 +52,7 @@ for i in range(NUM_WORKERS):
 def progress_callback(bytes_transferred, cache_key):
     current_progress = cache.get(cache_key, 0)
     new_progress = current_progress + bytes_transferred
-    print(f"Progress: {new_progress}")
+    # print(f"Progress: {new_progress}")
     cache.set(cache_key, new_progress)
 
 # Separate thread for uploading
@@ -63,6 +68,21 @@ def threaded_upload(s3_client, temp_file_path, s3_video_key, cache_key, video_fi
     video_instance.original_video_path = s3_video_key  # Set the s3_video_key
     video_instance.save()  # Save the changes to the database
 
+    download_url = "https://" + settings.CLOUDFRONT_DOMAIN + "/" + s3_video_key
+    # Send a message to the websocket
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'flask_group', 
+        {
+            'type': 'send_data_to_client',
+            'message': {
+                'video_url': download_url,
+                'video_id': cache_key,
+                'video_name': s3_video_key.split('/')[-1],
+            }
+        }
+    )
+
     cache.set(f"{cache_key}_original_path", s3_video_key)
 
 def upload(request):
@@ -73,7 +93,10 @@ def upload(request):
         if upload_form.is_valid():
 
             video_file = request.FILES['file']
-            s3_video_key = f"videos/{video_file.name}"
+            video_name = video_file.name
+            video_extension = video_name.split('.')[-1]
+            uuid_key = uuid.uuid4().hex
+            s3_video_key = f"videos/{uuid_key}.{video_extension}"
         
             cache_keys = request.session.get('upload_cache_keys', [])
 
@@ -93,6 +116,7 @@ def upload(request):
             cache.set(cache_key, 0)
             cache.set(f"{cache_key}_total", video_file.size)
             cache.set(f"{cache_key}_name", video_file.name)  # Storing video name in cache
+            cache.set(f"{cache_key}_status", "uploading")
 
             # Save cache keys to session for tracking upload progress
             request.session['upload_cache_keys'] = cache_keys
@@ -124,28 +148,26 @@ def upload(request):
 
 def upload_progress_view(request):
     cache_keys = request.session.get('upload_cache_keys', [])
-    
+    # print(f"Cache keys from view: {cache_keys}")
+
     progress_data = []
     for cache_key in cache_keys:
         progress = cache.get(cache_key)
         total_size = cache.get(f"{cache_key}_total")
         video_name = cache.get(f"{cache_key}_name")
         original_path = cache.get(f"{cache_key}_original_path")
-
-        download_url = None
-        if (original_path is not None):
-            download_url = settings.CLOUDFRONT_DOMAIN + "/" + original_path
-
-        print(f"Download URL: {original_path}")
+        download_url = cache.get(f"{cache_key}_download_url")
+        # print(f"progress: {progress}, total_size: {total_size}")
+        # download_url = None
+        # if (original_path is not None):
+        #     download_url = settings.CLOUDFRONT_DOMAIN + "/" + original_path
 
         # If any cache data is missing, skip this cache_key
         if None in [progress, total_size, video_name]:
             continue
 
-        status = "uploading"
+        status = cache.get(f"{cache_key}_status")
         percentage = (progress / total_size) * 100
-        if percentage == 100:
-            status = "uploaded"
 
         file_data = {
             "key": cache_key,
@@ -161,6 +183,7 @@ def upload_progress_view(request):
         progress_data.append(file_data)
 
     return JsonResponse({"files": progress_data})
+
 
 def details(request, page_num):
     user_id = request.session.get('user_id')
