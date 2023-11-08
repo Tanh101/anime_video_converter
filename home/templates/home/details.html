@@ -229,7 +229,7 @@
 
                         let actionHtml = '<i class="fa fa-spinner fa-spin"></i>'; // Default to spinning icon
                         if (file.download_url) {
-                            actionHtml = `<a href="https://${file.download_url}" class="text-indigo-600 hover:text-indigo-900">Download</a>`;
+                            actionHtml = `<a href="${file.download_url}" class="text-indigo-600 hover:text-indigo-900">Download</a>`;
                         }
 
                         // Check if row for this video already exists
@@ -265,8 +265,10 @@
                                 $row.find('td:last-child').html(actionHtml);
                             }
                         }
-
-                        if (file.progress < 100) {
+                        console.log(file.progress, file.status);
+                        console.log(file.download_url);
+                        // if (file.progress < 100 || file.status !== 'converted') {
+                        if (file.download_url === undefined) {
                             allCompleted = false;
                         }
                     });
@@ -292,7 +294,7 @@
         updateProgress();
 
         // Update every 5 seconds, keep the interval reference so we can clear it later
-        const updateInterval = setInterval(updateProgress, 1000);
+        const updateInterval = setInterval(updateProgress, 2000);
     });
 
 
