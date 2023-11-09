@@ -4,6 +4,8 @@ from django.core.cache import cache
 
 class VideoConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        active_connections = cache.get('active_connections', 0)
+        cache.set('active_connections', active_connections + 1)
         await self.channel_layer.group_add(
         'flask_group',
         self.channel_name
@@ -11,7 +13,14 @@ class VideoConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        pass
+        # Decrement the counter for active connections
+        active_connections = cache.get('active_connections', 1)
+        # Ensure we don't go into negative numbers
+        cache.set('active_connections', max(active_connections - 1, 0))
+        await self.channel_layer.group_discard(
+            'flask_group',
+            self.channel_name
+        )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)

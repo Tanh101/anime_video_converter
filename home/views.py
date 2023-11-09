@@ -25,6 +25,10 @@ import json
 # The queue to hold upload tasks
 upload_queue = queue.Queue()
 
+def is_any_websocket_connected():
+    active_connections = cache.get('active_connections', 0)
+    return active_connections > 0
+
 # The worker function
 def worker():
     while True:
@@ -38,6 +42,9 @@ def worker():
         threaded_upload(video, s3_client, temp_file_path, s3_video_key, cache_key, video_file_size)
         while True:
             download_url = cache.get(f"{cache_key}_download_url")
+            if is_any_websocket_connected():
+                upload_queue.task_done()
+                break
             if download_url:
                 upload_queue.task_done()
                 break
