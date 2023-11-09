@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-&08k%&v$x9z^x*279)v+9pu(-%fq4f@&(g-fkz(qhhl8_$@tki
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['13.51.173.8','animechan.vantanhly.io.vn']
+CSRF_TRUSTED_ORIGINS = ['https://animechan.vantanhly.io.vn']
 
 # Application definition
 
