@@ -21,6 +21,7 @@ from asgiref.sync import async_to_sync
 import websockets
 import asyncio
 import json
+from django.db.models import Q
 
 # The queue to hold upload tasks
 upload_queue = queue.Queue()
@@ -212,9 +213,9 @@ def details(request, page_num):
     start_index = (page_num - 1) * items_per_page
     end_index = start_index + items_per_page
 
-    videos = Video.objects.filter(user_id=user_id).order_by('-updated_at')[start_index:end_index]
+    videos = Video.objects.filter(Q(user_id=user_id) & (Q(status='converted') | Q(status='failed'))).order_by('-updated_at')[start_index:end_index]
 
-    total_count = Video.objects.filter(user_id=user_id).count()
+    total_count = Video.objects.filter(Q(user_id=user_id) & (Q(status='converted') | Q(status='failed'))).count()
     total_page = (total_count / items_per_page)
     tmp = round(total_page)
     if total_page > tmp:

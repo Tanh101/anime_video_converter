@@ -129,7 +129,7 @@
                             <td class="px-6 py-4">{{videos.name}}</td>
                             <td class="px-6 py-4 text-center">
                                 <span
-                                    class="inline-block bg-amber-400 text-white px-2 py-1 rounded uppercase">{{videos.status}}</span>
+                                    class="inline-block bg-indigo-600 text-white px-2 py-1 rounded uppercase">{{videos.status}}</span>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="w-full bg-gray-200 rounded-full">
@@ -140,7 +140,7 @@
                             </td>
                             {%if videos.status == 'converted' %}
                             <td class="px-6 py-4 text-sm font-medium text-center">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
+                                <a href="{{videos.converted_video_path}}" class="text-indigo-600 hover:text-indigo-900">Dowload</a>
                             </td>
                             {%endif%}
                         </tr>
